@@ -23,6 +23,7 @@ export interface Category {
   parent_id: number | null;
   image_url: string | null;
   sort_order: number;
+  nav_order?: number;
   is_active: boolean;
 }
 
@@ -30,6 +31,7 @@ export interface CategoryDetail { category: Category; children: Category[]; pare
 
 export interface Paged<T> { items: T[]; total: number; page: number; page_size: number }
 
+export interface Offer { id: number; title: string; slug: string; banner_url: string | null; percent: number; ends_at: string | null; product_count: number }
 export interface Banner { id: number; title: string | null; image_url: string; link_url: string | null }
 
 export interface CartLine {
@@ -145,7 +147,7 @@ export interface DeliveryZone { name: string; districts: string[]; fee: number; 
 export interface ReviewsOut {
   average: number | null;
   count: number;
-  items: { rating: number; comment: string | null; created_at: string; name: string }[];
+  items: { rating: number; comment: string | null; images?: string[]; reply?: string | null; created_at: string; name: string }[];
 }
 export interface MyReview {
   id: number;
@@ -153,6 +155,8 @@ export interface MyReview {
   slug: string;
   rating: number;
   comment: string | null;
+  images?: string[];
+  reply?: string | null;
   is_visible: boolean;
   created_at: string;
 }
@@ -168,3 +172,5 @@ export interface ReturnRequest {
 }
 
 export interface Suggestion { name: string; slug: string }
+
+export interface SupportMsg { id: number; sender: "customer" | "admin"; text: string | null; images: string[]; edited: boolean; created_at: string }

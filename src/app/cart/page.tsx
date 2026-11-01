@@ -30,7 +30,7 @@ export default function CartPage() {
       {cart.items.length === 0 ? (
         <EmptyState icon="bag" title="আপনার কার্ট খালি" text="পছন্দের পণ্য কার্টে যোগ করুন।" action={<LinkButton href="/shop">কেনাকাটা শুরু করুন</LinkButton>} />
       ) : (
-        <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
           <div className="rounded-2xl border border-line bg-white px-4">
             <ul className="divide-y divide-line">{cart.items.map((l) => <CartItemRow key={`${l.product_id}:${l.color_id ?? 0}`} line={l} />)}</ul>
             <div className="border-t border-line py-3 text-right">

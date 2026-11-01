@@ -115,8 +115,8 @@ export default function CheckoutPage() {
           <Suspense fallback={null}><LoginForm redirect={false} title="মোবাইল নম্বর ভেরিফাই" /></Suspense>
         </div>
       ) : (
-        <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
-          <div className="space-y-5">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+          <div className="min-w-0 space-y-5">
             <AddressPicker addresses={addresses} selectedId={addressId} userPhone={user.phone}
               onSelect={setAddressId} onAdded={(a) => { setAddresses((l) => [...l, a]); setAddressId(a.id); }} />
             <PaymentMethodPicker options={options} value={method} onChange={setMethod} />

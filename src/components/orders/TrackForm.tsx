@@ -28,7 +28,7 @@ export function TrackForm() {
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[380px_1fr]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
       <form onSubmit={submit} className="space-y-4 rounded-2xl border border-line bg-white p-5 lg:self-start">
         <Input label="অর্ডার নম্বর" placeholder="যেমন: AC1A2B3C4D" value={no} onChange={(e) => setNo(e.target.value)} />
         <Input label="মোবাইল নম্বর" type="tel" inputMode="tel" placeholder="01XXXXXXXXX" value={phone} onChange={(e) => setPhone(e.target.value)} />

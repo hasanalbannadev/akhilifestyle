@@ -1,8 +1,9 @@
+import { SupportChat } from "@/components/account/SupportChat";
 import { PageTitle } from "@/components/account/PageTitle";
 import { Icon } from "@/components/ui/Icon";
 import { SITE } from "@/lib/site";
 
-// Backend এ কাস্টমারের জন্য লাইভ চ্যাট API নেই (চ্যাট Messenger দিয়ে চলে), তাই এখানে যোগাযোগের মাধ্যমগুলো দেখানো হয়।
+// সাইটের ভেতরে সরাসরি মেসেজ (অ্যাডমিন এখান থেকেই উত্তর দেয়) + অন্য যোগাযোগের মাধ্যম।
 export default function SupportPage() {
   const wa = SITE.whatsapp ? `https://wa.me/${SITE.whatsapp.replace(/\D/g, "")}` : "";
   const links = [
@@ -14,6 +15,7 @@ export default function SupportPage() {
   return (
     <>
       <PageTitle title="সাপোর্ট" sub="যেকোনো সমস্যায় আমরা পাশে আছি।" />
+      <SupportChat />
       <ul className="grid gap-3 sm:grid-cols-2">
         {links.map((l) => (
           <li key={l.title}>

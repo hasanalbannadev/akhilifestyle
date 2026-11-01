@@ -40,7 +40,7 @@ export async function ProductListing({ basePath, categorySlug, sp }: { basePath:
   };
 
   return (
-    <div className="flex gap-8">
+    <div className="flex flex-col gap-3 lg:flex-row lg:gap-8">
       <ListingFilters categories={categories} cur={cur} />
       <div className="min-w-0 flex-1">
         <div className="mb-4 flex items-center justify-between gap-3">

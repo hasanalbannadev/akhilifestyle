@@ -14,7 +14,7 @@ export function AddToCartButton({ productId, stock, className = "" }: { productI
   return (
     <Button size="sm" loading={busy} className={`w-full ${className}`}
       onClick={async () => { setBusy(true); await add(productId, 1); setBusy(false); }}>
-      {!busy && <Icon name="bag" className="h-4 w-4" />} কার্টে যোগ করুন
+      {!busy && <Icon name="bag" className="h-4 w-4 shrink-0" />} কার্টে যোগ করুন
     </Button>
   );
 }

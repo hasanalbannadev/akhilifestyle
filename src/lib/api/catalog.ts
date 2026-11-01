@@ -1,7 +1,7 @@
 // পণ্য, ক্যাটাগরি, সার্চ, ডেলিভারি জোন - সবই public API
 import { api } from "./client";
 import type {
-  Banner, Category, CategoryDetail, DeliveryZone, Paged, Product, ReviewsOut, ShopInfo, Suggestion,
+  Banner, Category, Offer, CategoryDetail, DeliveryZone, Paged, Product, ReviewsOut, ShopInfo, Suggestion,
 } from "@/types";
 
 export interface ProductQuery {
@@ -26,6 +26,8 @@ export const catalogApi = {
   bestSellers: (limit = 12, revalidate = 60) =>
     api<Product[]>("/products/best-sellers", { query: { limit }, revalidate }),
   suggest: (q: string, signal?: AbortSignal) => api<Suggestion[]>("/search/suggest", { query: { q }, signal }),
+  offers: (revalidate = 60) => api<Offer[]>("/offers", { revalidate }),
+  offer: (slug: string, revalidate = 60) => api<{ offer: Offer; products: Product[] }>(`/offers/${slug}`, { revalidate }),
   banners: (revalidate = 120) => api<Banner[]>("/banners", { revalidate }),
   shopInfo: (revalidate = 300) => api<ShopInfo>("/shop/info", { revalidate }),
   zones: (revalidate = 300) => api<DeliveryZone[]>("/delivery/zones", { revalidate }),

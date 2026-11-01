@@ -54,7 +54,8 @@ function readDetail(data: unknown, fallback: string): string {
 export async function api<T>(path: string, opts: ApiOptions = {}): Promise<T> {
   const { method = "GET", body, query, auth, cart, revalidate, signal } = opts;
   const headers: Record<string, string> = { Accept: "application/json" };
-  if (body !== undefined) headers["Content-Type"] = "application/json";
+  const isForm = typeof FormData !== "undefined" && body instanceof FormData;
+  if (body !== undefined && !isForm) headers["Content-Type"] = "application/json";
   if (auth) {
     const t = tokenStore.get();
     if (t) headers.Authorization = `Bearer ${t}`;
@@ -65,7 +66,7 @@ export async function api<T>(path: string, opts: ApiOptions = {}): Promise<T> {
     method,
     headers,
     signal,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+    body: body === undefined ? undefined : isForm ? (body as FormData) : JSON.stringify(body),
   };
   if (typeof window === "undefined" && method === "GET" && revalidate) init.next = { revalidate };
   else init.cache = "no-store";

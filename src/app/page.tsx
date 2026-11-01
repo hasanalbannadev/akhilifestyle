@@ -3,6 +3,7 @@ import { HeroSlider } from "@/components/home/HeroSlider";
 import { FeatureStrip } from "@/components/home/FeatureStrip";
 import { CategoryCircles } from "@/components/home/CategoryCircles";
 import { SectionHeader } from "@/components/home/SectionHeader";
+import { OfferBanners } from "@/components/home/OfferBanners";
 import { PromoBanner } from "@/components/home/PromoBanner";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { catalogApi } from "@/lib/api/catalog";
@@ -16,11 +17,12 @@ export const metadata: Metadata = {
 
 // হোম পেজ: Banner -> Feature -> Category -> Best Seller -> Promo -> New Arrival
 export default async function HomePage() {
-  const [banners, categories, best, fresh] = await Promise.all([
+  const [banners, categories, best, fresh, offers] = await Promise.all([
     safe(catalogApi.banners(), []),
     safe(catalogApi.categories(), []),
     safe(catalogApi.bestSellers(6), []),
     safe(catalogApi.newArrivals(8), []),
+    safe(catalogApi.offers(), []),
   ]);
   const topCategories = categories.filter((c) => !c.parent_id);
 
@@ -37,7 +39,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      <PromoBanner />
+      {offers.length > 0 ? <OfferBanners offers={offers} /> : <PromoBanner />}
 
       {fresh.length > 0 && (
         <section>

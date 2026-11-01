@@ -12,7 +12,7 @@ import type { Category } from "@/types";
 function Badge({ n }: { n: number }) {
   if (!n) return null;
   return (
-    <span className="absolute -right-1.5 -top-1.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-brand-600 px-1 text-[10px] font-bold text-white">
+    <span className="absolute -right-1.5 max-[359px]:-right-0.5 -top-1.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-brand-600 px-1 text-[10px] font-bold text-white">
       {n > 99 ? "99+" : n}
     </span>
   );
@@ -20,7 +20,7 @@ function Badge({ n }: { n: number }) {
 
 function IconLink({ href, label, icon, badge = 0 }: { href: string; label: string; icon: string; badge?: number }) {
   return (
-    <Link href={href} aria-label={label} className="relative grid h-9 w-9 place-items-center rounded-full text-ink hover:bg-brand-50 sm:h-10 sm:w-10">
+    <Link href={href} aria-label={label} className="relative grid h-9 w-9 max-[359px]:h-8 max-[359px]:w-8 place-items-center rounded-full text-ink hover:bg-brand-50 sm:h-10 sm:w-10">
       <Icon name={icon} className="h-[22px] w-[22px]" />
       <Badge n={badge} />
     </Link>
@@ -33,7 +33,11 @@ export function Header({ categories }: { categories: Category[] }) {
   const { user } = useAuth();
   const { ids } = useWishlist();
   const [menu, setMenu] = useState(false);
-  const top = categories.filter((c) => !c.parent_id);
+  // টপ বারে কোন ক্যাটাগরি কোন ক্রমে - admin panel এর "Top bar position" (০ = দেখাবে না)। পুরোনো backend হলে আগের মতো প্রথম ৫টা।
+  const mains = categories.filter((c) => !c.parent_id);
+  const top = mains.some((c) => c.nav_order !== undefined)
+    ? mains.filter((c) => (c.nav_order ?? 0) > 0).sort((a, b) => (a.nav_order ?? 0) - (b.nav_order ?? 0))
+    : mains.slice(0, 5);
 
   // মেনু খোলা থাকলে পেছনের পেজ স্ক্রল হবে না
   useEffect(() => {
@@ -47,7 +51,7 @@ export function Header({ categories }: { categories: Category[] }) {
     <>
     <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
       <div className="container-x flex h-14 items-center gap-1.5 sm:gap-3 lg:gap-5">
-        <button className="grid h-9 w-9 shrink-0 place-items-center rounded-full hover:bg-brand-50 sm:h-10 sm:w-10 lg:hidden" onClick={() => setMenu(true)} aria-label="মেনু">
+        <button className="grid h-9 w-9 max-[359px]:h-8 max-[359px]:w-8 shrink-0 place-items-center rounded-full hover:bg-brand-50 sm:h-10 sm:w-10 lg:hidden" onClick={() => setMenu(true)} aria-label="মেনু">
           <Icon name="menu" />
         </button>
         <Logo />
@@ -55,7 +59,7 @@ export function Header({ categories }: { categories: Category[] }) {
         <nav className="hidden min-w-0 lg:block" aria-label="ক্যাটাগরি">
           <ul className="no-scrollbar flex items-center gap-5 overflow-x-auto text-[14px] font-medium">
             <li><Link href="/" className="whitespace-nowrap hover:text-brand-600">হোম</Link></li>
-            {top.slice(0, 5).map((c) => (
+            {top.map((c) => (
               <li key={c.id}><Link href={`/category/${c.slug}`} className="whitespace-nowrap hover:text-brand-600">{c.name}</Link></li>
             ))}
             <li><Link href="/shop" className="whitespace-nowrap text-brand-600 hover:underline">সব পণ্য</Link></li>

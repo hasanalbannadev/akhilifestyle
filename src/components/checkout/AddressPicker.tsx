@@ -37,9 +37,9 @@ export function AddressPicker({ addresses, selectedId, userPhone, onSelect, onAd
     <section className="rounded-2xl border border-line bg-white p-5">
       <h2 className="mb-3 text-lg font-bold">ডেলিভারি ঠিকানা</h2>
       {addresses.length > 0 && (
-        <ul className="mb-3 grid gap-3 sm:grid-cols-2">
+        <ul className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {addresses.map((a) => (
-            <li key={a.id}>
+            <li key={a.id} className="min-w-0">
               <button type="button" onClick={() => onSelect(a.id)} aria-pressed={selectedId === a.id}
                 className={cn("w-full rounded-xl border-2 p-3.5 text-left text-sm transition-colors",
                   selectedId === a.id ? "border-brand-600 bg-brand-50/60" : "border-line hover:border-brand-200")}>
@@ -48,7 +48,7 @@ export function AddressPicker({ addresses, selectedId, userPhone, onSelect, onAd
                   {selectedId === a.id && <Icon name="check-circle" className="h-5 w-5 text-brand-600" />}
                 </div>
                 <p className="text-muted">{a.phone}</p>
-                <p className="mt-1">{a.address_line}{a.area ? `, ${a.area}` : ""}, {a.district}</p>
+                <p className="mt-1 break-words">{a.address_line}{a.area ? `, ${a.area}` : ""}, {a.district}</p>
                 {a.is_default && <span className="mt-1.5 inline-block rounded bg-brand-100 px-1.5 text-xs font-semibold text-brand-700">ডিফল্ট</span>}
               </button>
             </li>

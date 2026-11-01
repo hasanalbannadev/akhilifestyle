@@ -94,7 +94,7 @@ export function ListingFilters({ categories, cur }: { categories: Category[]; cu
   return (
     <>
       <aside className="hidden w-60 shrink-0 lg:block"><Panel categories={categories} cur={cur} /></aside>
-      <Button variant="outline" size="sm" className="lg:hidden" onClick={() => setOpen(true)}>
+      <Button variant="outline" size="sm" className="self-start lg:hidden" onClick={() => setOpen(true)}>
         <Icon name="filter" className="h-4 w-4" /> ফিল্টার
       </Button>
       <Modal open={open} onClose={() => setOpen(false)} title="ফিল্টার">

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { StarRating } from "@/components/ui/StarRating";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Field";
+import { ReviewGallery, ReviewPhotos } from "@/components/product/ReviewPhotos";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/context/ToastContext";
 import { catalogApi } from "@/lib/api/catalog";
@@ -19,6 +20,7 @@ export function ReviewSection({ slug, initial }: { slug: string; initial: Review
   const [page, setPage] = useState(1);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
+  const [photos, setPhotos] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
 
   const reloadFirst = async () => { setData(await catalogApi.reviews(slug, 1)); setPage(1); };
@@ -33,9 +35,10 @@ export function ReviewSection({ slug, initial }: { slug: string; initial: Review
     e.preventDefault();
     setBusy(true);
     try {
-      await reviewsApi.add(slug, rating, comment.trim());
+      await reviewsApi.add(slug, rating, comment.trim(), photos);
       toast("আপনার রিভিউ জমা হয়েছে, ধন্যবাদ!");
       setComment("");
+      setPhotos([]);
       await reloadFirst();
     } catch (err) {
       toast(errorMessage(err), "error");
@@ -65,7 +68,14 @@ export function ReviewSection({ slug, initial }: { slug: string; initial: Review
                   <StarRating value={r.rating} />
                   <span className="ml-auto text-xs text-muted">{formatDate(r.created_at, false)}</span>
                 </div>
-                {r.comment && <p className="mt-2 text-[15px] leading-relaxed">{r.comment}</p>}
+                {r.comment && <p className="mt-2 break-words text-[15px] leading-relaxed">{r.comment}</p>}
+                <ReviewGallery images={r.images} />
+                {r.reply && (
+                  <div className="mt-2 rounded-lg bg-brand-50 p-3 text-sm">
+                    <p className="mb-0.5 text-xs font-bold text-brand-600">Akhi Lifestyle এর উত্তর</p>
+                    <p className="break-words">{r.reply}</p>
+                  </div>
+                )}
               </li>
             ))}
           </ul>
@@ -83,6 +93,7 @@ export function ReviewSection({ slug, initial }: { slug: string; initial: Review
             <form onSubmit={submit} className="space-y-3">
               <StarRating value={rating} onChange={setRating} size="h-7 w-7" />
               <Textarea value={comment} onChange={(e) => setComment(e.target.value)} maxLength={1000} placeholder="পণ্যটি কেমন লেগেছে?" />
+              <ReviewPhotos value={photos} onChange={setPhotos} />
               <Button type="submit" loading={busy}>রিভিউ জমা দিন</Button>
             </form>
           )}

@@ -68,12 +68,12 @@ export function ProductCard({ p, priority = false }: { p: Product; priority?: bo
       <div className="mt-auto pt-2">
         {colors.length > 0 ? (
           soldOut && p.stock < 1
-            ? <Button disabled variant="soft" size="sm" className="h-8! w-full text-[13px]">স্টক শেষ</Button>
-            : <Button size="sm" loading={busy} disabled={soldOut} onClick={addWithColor} className="h-8! w-full text-[13px]">
-                {!busy && <Icon name="bag" className="h-4 w-4" />} কার্টে যোগ করুন
+            ? <Button disabled variant="soft" size="sm" className="min-h-8 h-auto! w-full px-2 py-1 text-[13px] leading-tight">স্টক শেষ</Button>
+            : <Button size="sm" loading={busy} disabled={soldOut} onClick={addWithColor} className="min-h-8 h-auto! w-full px-2 py-1 text-[13px] leading-tight">
+                {!busy && <Icon name="bag" className="h-4 w-4 shrink-0" />} কার্টে যোগ করুন
               </Button>
         ) : (
-          <AddToCartButton productId={p.id} stock={p.stock} className="h-8! text-[13px]" />
+          <AddToCartButton productId={p.id} stock={p.stock} className="min-h-8 h-auto! px-2 py-1 text-[13px] leading-tight" />
         )}
       </div>
     </article>

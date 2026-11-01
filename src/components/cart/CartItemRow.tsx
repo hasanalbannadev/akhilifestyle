@@ -27,13 +27,13 @@ export function CartItemRow({ line }: { line: CartLine }) {
         )}
         <p className="mt-0.5 text-sm font-semibold text-brand-600">{taka(line.unit_price)}</p>
         {!line.in_stock && <p className="mt-0.5 text-xs font-medium text-red-600">এই পরিমাণ এখন স্টকে নেই</p>}
-        <div className="mt-2 flex items-center justify-between">
+        <div className="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
           <div className="inline-flex items-center rounded-lg border border-line">
             <button aria-label="কমান" disabled={busy} onClick={() => setQty(line.product_id, line.quantity - 1, cid)} className="grid h-9 w-9 place-items-center disabled:opacity-40"><Icon name="minus" className="h-4 w-4" /></button>
             <span className="w-8 text-center text-sm font-semibold">{busy ? <Spinner className="mx-auto h-4 w-4" /> : line.quantity}</span>
             <button aria-label="বাড়ান" disabled={busy} onClick={() => setQty(line.product_id, line.quantity + 1, cid)} className="grid h-9 w-9 place-items-center disabled:opacity-40"><Icon name="plus" className="h-4 w-4" /></button>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             <span className="font-bold">{taka(line.line_total)}</span>
             <button aria-label="মুছুন" disabled={busy} onClick={() => remove(line.product_id, cid)} className="grid h-9 w-9 place-items-center rounded-full text-brand-600 hover:bg-brand-50"><Icon name="trash" className="h-[18px] w-[18px]" /></button>
           </div>
