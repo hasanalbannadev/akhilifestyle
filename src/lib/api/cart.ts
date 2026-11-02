@@ -12,8 +12,8 @@ export const cartApi = {
   remove: (product_id: number, color_id = 0) =>
     api<CartView>(`/cart/items/${product_id}`, { method: "DELETE", query: { color_id }, cart: true }),
   clear: () => api<CartView>("/cart", { method: "DELETE", cart: true }),
-  summary: (district?: string, coupon_code?: string) =>
-    api<CartSummary>("/cart/summary", { cart: true, query: { district, coupon_code } }),
+  summary: (district?: string, coupon_code?: string, payment_method?: string) =>
+    api<CartSummary>("/cart/summary", { cart: true, query: { district, coupon_code, payment_method } }),
   validateCoupon: (code: string, subtotal: number) =>
     api<{ code: string; discount: number }>("/coupons/validate", { method: "POST", body: { code, subtotal } }),
 };

@@ -28,7 +28,7 @@ export const catalogApi = {
   suggest: (q: string, signal?: AbortSignal) => api<Suggestion[]>("/search/suggest", { query: { q }, signal }),
   offers: (revalidate = 60) => api<Offer[]>("/offers", { revalidate }),
   offer: (slug: string, revalidate = 60) => api<{ offer: Offer; products: Product[] }>(`/offers/${slug}`, { revalidate }),
-  banners: (revalidate = 120) => api<Banner[]>("/banners", { revalidate }),
+  banners: (revalidate = 120, placement: "hero" | "promo" = "hero") => api<Banner[]>("/banners", { query: { placement }, revalidate }),
   shopInfo: (revalidate = 300) => api<ShopInfo>("/shop/info", { revalidate }),
   zones: (revalidate = 300) => api<DeliveryZone[]>("/delivery/zones", { revalidate }),
   deliveryFee: (district: string, subtotal: number) =>

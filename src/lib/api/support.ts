@@ -3,6 +3,7 @@ import { api } from "./client";
 import type { SupportMsg } from "@/types";
 
 export const supportApi = {
+  unread: () => api<{ count: number }>("/me/support/unread", { auth: true }),
   list: () => api<SupportMsg[]>("/me/support", { auth: true }),
   send: (text: string, images: string[]) => api<SupportMsg>("/me/support", { method: "POST", body: { text, images }, auth: true }),
   edit: (id: number, text: string, images: string[]) => api<SupportMsg>(`/me/support/${id}`, { method: "PUT", body: { text, images }, auth: true }),

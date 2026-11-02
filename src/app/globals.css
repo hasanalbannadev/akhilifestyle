@@ -57,3 +57,12 @@ img { max-width: 100%; }
 .toast-in { animation: toast-in 0.2s ease-out; }
 @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.25); } 100% { transform: scale(1); } }
 .pop { animation: pop 0.25s ease-out; }
+
+/* ইনভয়েস প্রিন্ট: শুধু ইনভয়েসটা পুরো A4 পাতায় ছাপা হয় */
+@page { size: A4; margin: 12mm; }
+@media print {
+  body.printing-invoice > *:not(#invoice-print-portal) { display: none !important; }
+  body.printing-invoice #invoice-print-portal { display: block !important; position: static; width: 100%; }
+  body.printing-invoice { background: #fff !important; overflow: visible !important; }
+  body.printing-invoice * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

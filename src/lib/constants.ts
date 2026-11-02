@@ -30,12 +30,19 @@ export const PAYMENT_STATUS_LABEL: Record<PaymentStatus, string> = {
   refunded: "রিফান্ড হয়েছে",
 };
 
-export const PAY_METHOD_LABEL: Record<PayMethod, string> = {
+export const PAY_METHOD_LABEL: Record<string, string> = {
   cod: "ক্যাশ অন ডেলিভারি",
   sslcommerz: "কার্ড / মোবাইল ব্যাংকিং (SSLCommerz)",
-  manual_bkash: "bKash (ম্যানুয়াল)",
-  manual_nagad: "Nagad (ম্যানুয়াল)",
+  manual_bkash: "bKash",
+  manual_nagad: "Nagad",
 };
+
+// অর্ডারে দেখানোর পেমেন্ট নাম: admin এর দেওয়া নাম (bKash Personal ...) থাকলে সেটা, না হলে ডিফল্ট
+export function payLabel(method: PayMethod, label?: string | null): string {
+  if (method === "cod") return PAY_METHOD_LABEL.cod;
+  if (method === "sslcommerz") return PAY_METHOD_LABEL.sslcommerz;
+  return label || PAY_METHOD_LABEL[method] || method;
+}
 
 export const RETURN_STATUS_LABEL: Record<ReturnStatus, string> = {
   requested: "অনুরোধ করা হয়েছে",

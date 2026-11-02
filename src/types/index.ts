@@ -32,7 +32,10 @@ export interface CategoryDetail { category: Category; children: Category[]; pare
 export interface Paged<T> { items: T[]; total: number; page: number; page_size: number }
 
 export interface Offer { id: number; title: string; slug: string; banner_url: string | null; percent: number; ends_at: string | null; product_count: number }
-export interface Banner { id: number; title: string | null; image_url: string; link_url: string | null }
+export interface Banner {
+  id: number; title: string | null; image_url: string | null; link_url: string | null;
+  subtitle?: string | null; button_text?: string | null; placement?: "hero" | "promo";
+}
 
 export interface CartLine {
   product_id: number;
@@ -58,7 +61,7 @@ export interface CartSummary {
   count: number;
 }
 
-export interface User { id: number; phone: string; name: string | null; email: string | null }
+export interface User { id: number; phone: string; name: string | null; email: string | null; avatar_url?: string | null }
 export interface TokenOut { access_token: string; token_type: string; phone: string }
 export interface OtpSent { sent: boolean; expires_in: number; debug_code?: string }
 
@@ -75,13 +78,16 @@ export interface Address extends AddressIn { id: number }
 
 export type OrderStatus = "pending" | "confirmed" | "processing" | "shipped" | "delivered" | "cancelled";
 export type PaymentStatus = "unpaid" | "pending_verification" | "paid" | "failed" | "refunded";
-export type PayMethod = "cod" | "sslcommerz" | "manual_bkash" | "manual_nagad";
+// "cod" | "sslcommerz" | "pm_<id>" (admin এর যোগ করা bKash/Nagad/ব্যাংক) | পুরোনো "manual_bkash" / "manual_nagad"
+export type PayMethod = string;
 
 export interface OrderItem { name: string; unit_price: number; quantity: number }
 export interface Order {
   order_no: string;
   status: OrderStatus;
   payment_method: PayMethod;
+  payment_label?: string | null;
+  cancel_requested?: boolean;
   payment_status: PaymentStatus;
   subtotal: number;
   shipping_fee: number;
@@ -103,6 +109,7 @@ export interface Order {
 export interface OrderCreateBody {
   ship: { name: string; district: string; area?: string | null; address: string };
   payment_method: PayMethod;
+  payment?: { sender_number: string; trx_id: string } | null;
   note?: string | null;
   coupon_code?: string | null;
 }
@@ -120,20 +127,26 @@ export interface Invoice {
   shipping_fee: number;
   total: number;
   payment_method: string;
+  payment_label?: string | null;
   payment_status: string;
   courier: string | null;
   tracking_code: string | null;
 }
 
+export interface PayAccount {
+  key: string; id: number; kind: "bkash" | "nagad" | "rocket" | "upay" | "bank" | "other"; title: string;
+  account_number: string | null; account_name: string | null; bank_name: string | null; branch: string | null;
+  instructions: string | null;
+}
 export interface PaymentOptions {
   cod: { enabled: boolean };
   sslcommerz: { enabled: boolean };
-  manual_bkash: { enabled: boolean; number: string; note: string };
-  manual_nagad: { enabled: boolean; number: string; note: string };
+  methods: PayAccount[];   // admin এর যোগ করা অ্যাকাউন্ট (bKash, Nagad, ব্যাংক...)
 }
 
 export interface PaymentHistoryRow {
   order_no: string;
+  label?: string | null;
   method: string;
   amount: number;
   status: string;
@@ -141,7 +154,7 @@ export interface PaymentHistoryRow {
   created_at: string;
 }
 
-export interface ShopInfo { currency: string; min_order_amount: number; payment_methods: Record<string, boolean> }
+export interface ShopInfo { currency: string; min_order_amount: number; payment_methods: Record<string, boolean>; social?: Record<string, string> }
 export interface DeliveryZone { name: string; districts: string[]; fee: number; free_over: number | null }
 
 export interface ReviewsOut {

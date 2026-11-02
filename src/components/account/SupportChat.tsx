@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Field";
+import { ChatComposer } from "./ChatComposer";
 import { ReviewGallery, ReviewPhotos } from "@/components/product/ReviewPhotos";
 import { useToast } from "@/context/ToastContext";
 import { supportApi } from "@/lib/api/support";
@@ -23,7 +24,7 @@ export function SupportChat() {
   const first = useRef(true);
 
   const load = useCallback(async () => {
-    try { setMsgs(await supportApi.list()); } catch { setMsgs((m) => m ?? []); }
+    try { setMsgs(await supportApi.list()); window.dispatchEvent(new Event("support-seen")); } catch { setMsgs((m) => m ?? []); }
   }, []);
   useEffect(() => {
     load();
@@ -36,8 +37,7 @@ export function SupportChat() {
     endRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [msgs?.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const send = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const send = async () => {
     if (!text.trim() && !photos.length) return;
     setBusy(true);
     try { await supportApi.send(text.trim(), photos); setText(""); setPhotos([]); await load(); }
@@ -93,11 +93,8 @@ export function SupportChat() {
           })}
         <div ref={endRef} />
       </div>
-      <form onSubmit={send} className="space-y-2 border-t border-line p-3">
-        <Textarea value={text} onChange={(e) => setText(e.target.value)} maxLength={1500} placeholder="আপনার মেসেজ লিখুন…" />
-        <ReviewPhotos value={photos} max={3} onChange={setPhotos} upload={supportApi.upload} discard={supportApi.discard} />
-        <Button type="submit" loading={busy} disabled={!text.trim() && !photos.length}>পাঠান</Button>
-      </form>
+      <ChatComposer text={text} onText={setText} photos={photos} onPhotos={setPhotos} busy={busy} onSend={() => send()}
+        upload={supportApi.upload} discard={supportApi.discard} />
     </section>
   );
 }

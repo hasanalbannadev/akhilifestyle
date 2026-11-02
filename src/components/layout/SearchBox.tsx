@@ -6,7 +6,7 @@ import { Icon } from "@/components/ui/Icon";
 import type { Suggestion } from "@/types";
 
 // সার্চ বক্স: টাইপ করলে /search/suggest থেকে সাজেশন, Enter দিলে /shop?q=
-export function SearchBox({ className = "" }: { className?: string }) {
+export function SearchBox({ className = "", big = false }: { className?: string; big?: boolean }) {
   const router = useRouter();
   const [q, setQ] = useState("");
   const [list, setList] = useState<Suggestion[]>([]);
@@ -44,11 +44,17 @@ export function SearchBox({ className = "" }: { className?: string }) {
           onFocus={() => list.length && setOpen(true)}
           placeholder="কী খুঁজছেন?"
           aria-label="পণ্য খুঁজুন"
-          className="h-11 w-full rounded-full border border-line bg-white pl-4 pr-12 text-[15px] focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-100"
+          className={`w-full rounded-full border border-line bg-white pl-5 text-[15px] shadow-sm focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-100 ${big ? "h-12 pr-28" : "h-11 pr-12"}`}
         />
-        <button type="submit" aria-label="সার্চ" className="absolute right-1.5 top-1.5 grid h-8 w-8 place-items-center rounded-full bg-brand-600 text-white">
-          <Icon name="search" className="h-4 w-4" />
-        </button>
+        {big ? (
+          <button type="submit" aria-label="সার্চ" className="absolute right-1.5 top-1.5 flex h-9 items-center gap-1.5 rounded-full bg-brand-600 px-4 text-sm font-semibold text-white hover:bg-brand-700">
+            <Icon name="search" className="h-4 w-4" />সার্চ
+          </button>
+        ) : (
+          <button type="submit" aria-label="সার্চ" className="absolute right-1.5 top-1.5 grid h-8 w-8 place-items-center rounded-full bg-brand-600 text-white">
+            <Icon name="search" className="h-4 w-4" />
+          </button>
+        )}
       </form>
       {open && list.length > 0 && (
         <ul className="absolute z-50 mt-2 w-full overflow-hidden rounded-xl border border-line bg-white shadow-lg">

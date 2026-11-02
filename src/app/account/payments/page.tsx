@@ -5,9 +5,8 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { PageLoader } from "@/components/ui/Spinner";
 import { useAsync } from "@/hooks/useAsync";
 import { paymentsApi } from "@/lib/api/payments";
-import { PAY_METHOD_LABEL } from "@/lib/constants";
+import { payLabel } from "@/lib/constants";
 import { formatDate, taka } from "@/lib/format";
-import type { PayMethod } from "@/types";
 
 const STATUS: Record<string, string> = { pending: "যাচাই চলছে", approved: "গৃহীত", success: "সফল", rejected: "বাতিল", failed: "ব্যর্থ" };
 
@@ -22,7 +21,7 @@ export default function PaymentHistoryPage() {
             <li key={i} className="flex items-center justify-between gap-3 rounded-xl border border-line bg-white p-4 text-sm">
               <div>
                 <Link href={`/order/${p.order_no}`} className="font-bold hover:text-brand-600">#{p.order_no}</Link>
-                <p className="text-muted">{PAY_METHOD_LABEL[p.method as PayMethod] ?? p.method}{p.trx_id ? ` · ${p.trx_id}` : ""}</p>
+                <p className="text-muted">{payLabel(p.method, p.label)}{p.trx_id ? ` · ${p.trx_id}` : ""}</p>
                 <p className="text-xs text-muted">{formatDate(p.created_at)}</p>
               </div>
               <div className="text-right"><b className="text-base">{taka(p.amount)}</b><p className="text-xs">{STATUS[p.status] ?? p.status}</p></div>

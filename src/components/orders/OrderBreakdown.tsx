@@ -1,4 +1,4 @@
-import { PAY_METHOD_LABEL } from "@/lib/constants";
+import { payLabel } from "@/lib/constants";
 import { formatDate, taka } from "@/lib/format";
 import { PaymentStatusBadge } from "./StatusBadge";
 import type { Order } from "@/types";
@@ -36,7 +36,7 @@ export function OrderBreakdown({ order }: { order: Order }) {
         </div>
         <div className="rounded-xl border border-line p-4 text-sm">
           <h3 className="mb-1.5 font-bold">পেমেন্ট</h3>
-          <p>{PAY_METHOD_LABEL[order.payment_method] ?? order.payment_method}</p>
+          <p>{payLabel(order.payment_method, order.payment_label)}</p>
           <div className="mt-1.5"><PaymentStatusBadge status={order.payment_status} /></div>
           <p className="mt-2 text-xs text-muted">অর্ডারের সময়: {formatDate(order.created_at)}</p>
         </div>

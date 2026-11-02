@@ -3,7 +3,7 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AddressPicker } from "@/components/checkout/AddressPicker";
 import { CouponBox } from "@/components/checkout/CouponBox";
-import { PaymentMethodPicker, enabledMethods } from "@/components/checkout/PaymentMethodPicker";
+import { PaymentMethodPicker, enabledMethods, type PayInput } from "@/components/checkout/PaymentMethodPicker";
 import { OrderSummary } from "@/components/cart/OrderSummary";
 import { LoginForm } from "@/components/account/LoginForm";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
@@ -31,6 +31,7 @@ export default function CheckoutPage() {
   const [addressId, setAddressId] = useState<number | null>(null);
   const [options, setOptions] = useState<PaymentOptions | null>(null);
   const [method, setMethod] = useState<PayMethod | null>(null);
+  const [pay, setPay] = useState<PayInput>({ sender: "", trx: "" });
   const [coupon, setCoupon] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [summary, setSummary] = useState<CartSummary | null>(null);
@@ -59,23 +60,28 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (!cart.items.length) return;
     let alive = true;
-    cartApi.summary(selected?.district, coupon ?? undefined)
+    cartApi.summary(selected?.district, coupon ?? undefined, method ?? "cod")
       .then((s) => {
         if (!alive) return;
         setSummary(s);
         if (s.coupon_error) { toast(s.coupon_error, "error"); setCoupon(null); }
       }).catch(() => {});
     return () => { alive = false; };
-  }, [selected?.district, coupon, cart.subtotal, cart.items.length, toast]);
+  }, [selected?.district, coupon, method, cart.subtotal, cart.items.length, toast]);
 
   const placeOrder = async () => {
     if (!selected) { toast("ডেলিভারি ঠিকানা বাছাই করুন", "error"); return; }
     if (!method) { toast("পেমেন্ট মেথড বাছাই করুন", "error"); return; }
+    const isAcct = method.startsWith("pm_");
+    if (isAcct && (pay.sender.trim().length < 3 || pay.trx.trim().length < 4)) {
+      toast("যে নম্বর থেকে পাঠিয়েছেন আর TrxID দিন", "error"); return;
+    }
     setPlacing(true);
     try {
       const order = await ordersApi.create({
         ship: { name: selected.recipient_name, district: selected.district, area: selected.area, address: selected.address_line },
         payment_method: method,
+        payment: isAcct ? { sender_number: pay.sender.trim(), trx_id: pay.trx.trim() } : null,
         note: note.trim() || null,
         coupon_code: coupon,
       });
@@ -119,7 +125,7 @@ export default function CheckoutPage() {
           <div className="min-w-0 space-y-5">
             <AddressPicker addresses={addresses} selectedId={addressId} userPhone={user.phone}
               onSelect={setAddressId} onAdded={(a) => { setAddresses((l) => [...l, a]); setAddressId(a.id); }} />
-            <PaymentMethodPicker options={options} value={method} onChange={setMethod} />
+            <PaymentMethodPicker options={options} value={method} onChange={setMethod} pay={pay} onPay={setPay} />
             <CouponBox applied={coupon} subtotal={cart.subtotal} onApply={setCoupon} />
             <section className="rounded-2xl border border-line bg-white p-5">
               <Textarea label="অর্ডার নোট (ঐচ্ছিক)" value={note} onChange={(e) => setNote(e.target.value)} placeholder="ডেলিভারি নিয়ে কিছু বলার থাকলে লিখুন" maxLength={300} />

@@ -70,8 +70,8 @@ export function OrderDetailView({ orderNo, placed, paid }: { orderNo: string; pl
   if (error || !order) return <EmptyState icon="info" title="অর্ডার পাওয়া যায়নি" text={error} action={<Link href="/account/orders" className="font-semibold text-brand-600">আমার অর্ডারে যান</Link>} />;
 
   const unpaid = order.payment_status === "unpaid" || order.payment_status === "failed";
-  const canCancel = (order.status === "pending" || order.status === "confirmed") && order.payment_status !== "paid";
-  const isManual = order.payment_method === "manual_bkash" || order.payment_method === "manual_nagad";
+  const canCancel = (order.status === "pending" || order.status === "confirmed" || order.status === "processing") && !order.cancel_requested;
+  const isManual = order.payment_method.startsWith("pm_") || order.payment_method === "manual_bkash" || order.payment_method === "manual_nagad";
 
   return (
     <div className="mx-auto max-w-4xl space-y-5">
@@ -82,7 +82,7 @@ export function OrderDetailView({ orderNo, placed, paid }: { orderNo: string; pl
         <div className="rounded-2xl bg-gradient-to-r from-emerald-50 to-white p-6 text-center">
           <Icon name="check-circle" className="mx-auto h-12 w-12 text-emerald-500" />
           <h1 className="mt-2 text-2xl font-bold">অর্ডার সম্পন্ন হয়েছে!</h1>
-          <p className="text-muted">আপনার অর্ডার নম্বর <b className="text-ink">#{order.order_no}</b>। SMS এ কনফার্মেশন পাবেন।</p>
+          <p className="text-muted">আপনার অর্ডার নম্বর <b className="text-ink">#{order.order_no}</b>। আমরা অর্ডার কনফার্ম করলে SMS পাবেন।</p>
         </div>
       )}
 
@@ -92,6 +92,9 @@ export function OrderDetailView({ orderNo, placed, paid }: { orderNo: string; pl
       </div>
 
       {/* পেমেন্ট বাকি থাকলে */}
+      {order.cancel_requested && order.status !== "cancelled" && (
+        <div className="rounded-xl bg-amber-50 p-4 text-sm font-medium text-amber-800">আপনার বাতিলের অনুরোধ পাঠানো হয়েছে। আমরা কনফার্ম করলে অর্ডার বাতিল হবে এবং আপনাকে জানানো হবে।</div>
+      )}
       {unpaid && order.payment_method === "sslcommerz" && order.status !== "cancelled" && (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border-2 border-brand-200 bg-brand-50/50 p-5">
           <p className="font-semibold">অনলাইন পেমেন্ট এখনো বাকি আছে</p>
@@ -116,8 +119,8 @@ export function OrderDetailView({ orderNo, placed, paid }: { orderNo: string; pl
         <Button variant="outline" loading={busy === "reorder"} onClick={reorder}><Icon name="refresh" className="h-4 w-4" /> আবার অর্ডার করুন</Button>
         {canCancel && (
           <Button variant="soft" loading={busy === "cancel"}
-            onClick={() => { if (confirm("অর্ডারটি বাতিল করতে চান?")) act("cancel", () => ordersApi.cancel(order.order_no), "অর্ডার বাতিল হয়েছে"); }}>
-            অর্ডার বাতিল করুন
+            onClick={() => { if (confirm("অর্ডার বাতিলের অনুরোধ পাঠাতে চান? আমরা কনফার্ম করলে অর্ডার বাতিল হবে।")) act("cancel", () => ordersApi.cancel(order.order_no), "বাতিলের অনুরোধ পাঠানো হয়েছে"); }}>
+            বাতিলের অনুরোধ করুন
           </Button>
         )}
         {order.status === "delivered" && <Button variant="soft" onClick={() => setRet(true)}><Icon name="return" className="h-4 w-4" /> রিটার্ন করুন</Button>}
