@@ -8,6 +8,7 @@ export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
   shipped: "শিপড হয়েছে",
   delivered: "ডেলিভারি সম্পন্ন",
   cancelled: "বাতিল",
+  returned: "Returned",
 };
 
 // ট্র্যাকিং টাইমলাইনের ধাপ
@@ -20,6 +21,7 @@ export const ORDER_STEP_DESC: Record<OrderStatus, string> = {
   shipped: "কুরিয়ারে হস্তান্তর করা হয়েছে",
   delivered: "পণ্য ডেলিভারি সম্পন্ন",
   cancelled: "অর্ডার বাতিল করা হয়েছে",
+  returned: "পণ্য ফেরত এসেছে",
 };
 
 export const PAYMENT_STATUS_LABEL: Record<PaymentStatus, string> = {
@@ -47,9 +49,20 @@ export function payLabel(method: PayMethod, label?: string | null): string {
 export const RETURN_STATUS_LABEL: Record<ReturnStatus, string> = {
   requested: "অনুরোধ করা হয়েছে",
   approved: "অনুমোদিত",
+  pickup: "পিকআপ চলছে",
+  received: "রিটার্ন সফল",
   rejected: "বাতিল",
-  refunded: "রিফান্ড সম্পন্ন",
+  refunded: "Refund Completed",
 };
+
+// রিটার্ন/রিফান্ডের ধাপ (ক্রমানুসারে)
+export const RETURN_STEPS: { key: ReturnStatus; label: string; desc: string }[] = [
+  { key: "requested", label: "রিটার্নের আবেদন", desc: "আপনার আবেদন আমরা পেয়েছি" },
+  { key: "approved", label: "রিটার্ন অনুমোদিত", desc: "আবেদন গ্রহণ করা হয়েছে" },
+  { key: "pickup", label: "কুরিয়ার পিকআপ", desc: "কুরিয়ার আপনার কাছ থেকে পণ্য নিয়ে আসছে" },
+  { key: "received", label: "রিটার্ন সফল", desc: "পণ্য আমাদের কাছে পৌঁছেছে" },
+  { key: "refunded", label: "রিফান্ড সম্পন্ন", desc: "বিকাশে টাকা পাঠানো হয়েছে" },
+];
 
 export const SORT_OPTIONS = [
   { value: "new", label: "সর্বশেষ" },
@@ -106,4 +119,22 @@ export const COURIER_STATUS_LABEL: Record<string, string> = {
   cancelled: "ডেলিভারি হয়নি, পণ্য ফেরত আসছে",
   exceptional: "পার্সেলে সমস্যা হয়েছে, আমরা যোগাযোগ করব",
   unknown: "কুরিয়ারের তথ্য পাওয়া যায়নি",
+  // Pathao
+  order_created: "কুরিয়ারে বুক হয়েছে, শীঘ্রই পিকআপ হবে",
+  order_updated: "অর্ডার আপডেট হয়েছে",
+  pickup_requested: "পিকআপের অনুরোধ করা হয়েছে",
+  assigned_for_pickup: "রাইডার পিকআপে আসছে",
+  picked: "পার্সেল পিকআপ হয়েছে",
+  pickup_failed: "পিকআপ হয়নি, আবার চেষ্টা হবে",
+  pickup_cancelled: "পিকআপ বাতিল হয়েছে",
+  at_the_sorting_hub: "সর্টিং হাবে আছে",
+  in_transit: "পার্সেল পথে আছে",
+  received_at_last_mile_hub: "আপনার এলাকার হাবে পৌঁছেছে",
+  assigned_for_delivery: "রাইডার ডেলিভারির জন্য বের হয়েছে",
+  partial_delivery: "আংশিক ডেলিভারি সম্পন্ন",
+  return: "ডেলিভারি হয়নি, পণ্য ফেরত আসছে",
+  delivery_failed: "ডেলিভারি করা যায়নি, আমরা যোগাযোগ করব",
+  on_hold: "পার্সেল হোল্ডে আছে, আমরা যোগাযোগ করব",
+  paid_return: "পেইড রিটার্ন",
+  exchange: "এক্সচেঞ্জ",
 };

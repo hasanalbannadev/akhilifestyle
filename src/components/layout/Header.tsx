@@ -11,7 +11,7 @@ import { useWishlist } from "@/context/WishlistContext";
 import { supportApi } from "@/lib/api/support";
 import type { Category } from "@/types";
 
-// লগইন করা কাস্টমারের না-দেখা মেসেজের সংখ্যা (৩০ সেকেন্ড পরপর; ট্যাব লুকানো থাকলে নয়)। চ্যাট খুললে সাথে সাথে ০।
+// লগইন করা কাস্টমারের না-দেখা মেসেজের সংখ্যা (৮ সেকেন্ড পরপর; ট্যাব লুকানো থাকলে নয়)। চ্যাট খুললে সাথে সাথে ০।
 function useSupportUnread(enabled: boolean) {
   const [n, setN] = useState(0);
   useEffect(() => {
@@ -19,7 +19,7 @@ function useSupportUnread(enabled: boolean) {
     let alive = true;
     const load = () => { if (!document.hidden) supportApi.unread().then((r) => alive && setN(r.count)).catch(() => {}); };
     load();
-    const t = setInterval(load, 30000);
+    const t = setInterval(load, 8000);
     const seen = () => setN(0);
     window.addEventListener("support-seen", seen);
     return () => { alive = false; clearInterval(t); window.removeEventListener("support-seen", seen); };
@@ -75,7 +75,7 @@ function CategoryMenu({ mains, subsOf }: { mains: Category[]; subsOf: (id: numbe
                 <li key={c.id} className="mb-2 break-inside-avoid">
                   <Link href={`/category/${c.slug}`} className="block rounded-lg px-2.5 py-1.5 text-sm font-bold hover:bg-brand-50 hover:text-brand-600">{c.name}</Link>
                   {subsOf(c.id).map((s) => (
-                    <Link key={s.id} href={`/category/${s.slug}`} className="block truncate rounded-lg py-1 pl-5 pr-2.5 text-[13px] text-muted hover:bg-brand-50 hover:text-brand-600">{s.name}</Link>
+                    <Link key={s.id} href={`/category/${s.slug}`} className="block break-words rounded-lg py-1 pl-5 pr-2.5 text-[13px] text-muted hover:bg-brand-50 hover:text-brand-600">{s.name}</Link>
                   ))}
                 </li>
               ))}
@@ -106,7 +106,7 @@ function DrawerItem({ cat, subs }: { cat: Category; subs: Category[] }) {
       {open && subs.length > 0 && (
         <ul className="mb-1 ml-3 border-l border-line pl-2">
           {subs.map((c) => (
-            <li key={c.id}><Link className="block truncate rounded-lg px-3 py-2 text-sm hover:bg-brand-50" href={`/category/${c.slug}`}>{c.name}</Link></li>
+            <li key={c.id}><Link className="block break-words rounded-lg px-3 py-2 text-sm hover:bg-brand-50" href={`/category/${c.slug}`}>{c.name}</Link></li>
           ))}
         </ul>
       )}

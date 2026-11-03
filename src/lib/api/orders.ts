@@ -14,7 +14,7 @@ export const ordersApi = {
 
   returns: () => api<ReturnRequest[]>("/returns", { auth: true }),
   returnDetail: (id: number) => api<ReturnRequest>(`/returns/${id}`, { auth: true }),
-  requestReturn: (orderNo: string, reason: string) =>
-    api<{ id: number; status: string }>(`/orders/${orderNo}/return`, { method: "POST", body: { reason }, auth: true }),
+  requestReturn: (orderNo: string, reason: string, refund_bkash: string) =>
+    api<{ id: number; status: string }>(`/orders/${orderNo}/return`, { method: "POST", body: { reason, refund_bkash }, auth: true }),
   cancelReturn: (id: number) => api<{ ok: boolean }>(`/returns/${id}/cancel`, { method: "POST", auth: true }),
 };

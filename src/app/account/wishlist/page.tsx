@@ -43,7 +43,7 @@ export default function WishlistPage() {
               </Link>
               <div className="flex min-w-0 flex-1 flex-col justify-between">
                 <div>
-                  <Link href={`/product/${p.slug}`} className="line-clamp-2 font-medium hover:text-brand-600">{p.name}</Link>
+                  <Link href={`/product/${p.slug}`} className="break-words font-medium hover:text-brand-600">{p.name}</Link>
                   <PriceTag price={p.price} compare={p.compare_at_price} />
                 </div>
                 <div className="flex gap-2">

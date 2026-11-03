@@ -24,7 +24,7 @@ const script = Dancing_Script({ subsets: ["latin"], weight: ["700"], variable: "
 // ===== সারা সাইটের ডিফল্ট SEO / Meta tag =====
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  title: { default: `${SITE.name} - ব্যাগ, জুয়েলারি ও লাইফস্টাইল অ্যাক্সেসরিজ`, template: `%s | ${SITE.name}` },
+  title: { default: `${SITE.name} - ব্যাগ, জুয়েলারি ও লাইফস্টাইল অ্যাক্সেসরিজ`, template: `${SITE.name} - %s` },
   description: SITE.description,
   applicationName: SITE.name,
   keywords: ["Akhi Lifestyle", "ব্যাগ", "জুয়েলারি", "অ্যাক্সেসরিজ", "অনলাইন শপ বাংলাদেশ", "ক্যাশ অন ডেলিভারি"],

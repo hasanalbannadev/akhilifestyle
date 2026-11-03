@@ -57,7 +57,7 @@ export default function ProfilePage() {
         </button>
         <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={pickPic} />
         <div className="min-w-0">
-          <p className="truncate text-lg font-bold">{user?.name || "আপনার নাম যোগ করুন"}</p>
+          <p className="break-words text-lg font-bold">{user?.name || "আপনার নাম যোগ করুন"}</p>
           <p className="text-sm text-muted">{user?.phone}</p>
           <div className="mt-1 flex gap-3 text-xs">
             <button type="button" className="font-semibold text-brand-600" onClick={() => fileRef.current?.click()} disabled={picBusy}>{user?.avatar_url ? "ছবি বদলান" : "ছবি যোগ করুন"}</button>

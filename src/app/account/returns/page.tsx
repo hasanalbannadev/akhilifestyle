@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { PageTitle } from "@/components/account/PageTitle";
 import { ReturnStatusBadge } from "@/components/orders/StatusBadge";
+import { ReturnProgress } from "@/components/orders/ReturnProgress";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageLoader } from "@/components/ui/Spinner";
 import { useToast } from "@/context/ToastContext";
@@ -46,7 +47,10 @@ export default function ReturnsPage() {
                 <Link href={`/order/${r.order_no}`} className="font-bold hover:text-brand-600">#{r.order_no}</Link>
                 <ReturnStatusBadge status={r.status} />
               </div>
-              <p className="mt-2">{r.reason}</p>
+              <p className="mt-2 break-words">{r.reason}</p>
+              <ReturnProgress r={r} />
+              {r.status === "refunded" && <p className="mt-2 rounded-lg bg-emerald-50 p-2.5 text-emerald-800"><b>Refund Completed</b> · ৳{Math.round(r.refund_amount ?? r.total ?? 0)} · TrxID {r.refund_trx}</p>}
+              {r.refund_bkash && <p className="mt-2 text-xs text-muted">রিফান্ডের বিকাশ নম্বর: <b className="text-ink">{r.refund_bkash}</b></p>}
               {open === r.id && <p className="mt-2 rounded-lg bg-brand-50/60 p-2.5 text-sm">{detail[r.id] ?? "লোড হচ্ছে..."}</p>}
               {r.admin_note && open !== r.id && <p className="mt-2 rounded-lg bg-brand-50/60 p-2.5"><b>আমাদের নোট:</b> {r.admin_note}</p>}
               <div className="mt-2 flex items-center justify-between text-xs text-muted">

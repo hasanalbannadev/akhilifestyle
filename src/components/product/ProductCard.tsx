@@ -14,7 +14,7 @@ import type { Product } from "@/types";
 
 // পণ্যের কার্ড (হোম, ক্যাটাগরি, রিলেটেড সব জায়গায় একই)।
 // রং থাকলে: রং বাটন (radio) চাপলে সেই রং বাছাই হয় ও কার্ডের ছবি সেই রঙের ছবি হয়ে যায়।
-export function ProductCard({ p, priority = false }: { p: Product; priority?: boolean }) {
+export function ProductCard({ p, priority = false, best = false }: { p: Product; priority?: boolean; best?: boolean }) {
   const off = discountPercent(p.price, p.compare_at_price);
   const colors = p.colors ?? [];
   const [colorId, setColorId] = useState<number | null>(null);
@@ -42,9 +42,10 @@ export function ProductCard({ p, priority = false }: { p: Product; priority?: bo
         </Link>
         <WishlistButton productId={p.id} className="absolute right-1.5 top-1.5" />
         {off > 0 && <span className="absolute left-1.5 top-1.5 rounded bg-brand-600 px-1 py-0.5 text-[10px] font-bold text-white">{off}%</span>}
+        {best && <span className={`absolute left-1.5 rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-bold leading-tight text-white ${p.stock < 1 ? "bottom-6" : "bottom-1.5"}`}>Best Seller</span>}
         {p.stock < 1 && <span className="absolute inset-x-0 bottom-0 bg-navy/70 py-0.5 text-center text-[11px] text-white">স্টক শেষ</span>}
       </div>
-      <Link href={`/product/${p.slug}`} className="mt-1.5 line-clamp-2 min-h-9 text-[13px] font-medium leading-[18px] hover:text-brand-600">
+      <Link href={`/product/${p.slug}`} className="mt-1.5 min-h-9 break-words text-[13px] font-medium leading-[18px] hover:text-brand-600">
         {p.name}
       </Link>
       <div className="mt-0.5"><PriceTag price={p.price} compare={p.compare_at_price} /></div>

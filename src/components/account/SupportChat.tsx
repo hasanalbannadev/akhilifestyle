@@ -23,14 +23,33 @@ export function SupportChat() {
   const endRef = useRef<HTMLDivElement>(null);
   const first = useRef(true);
 
+  const lastId = useRef(0);
   const load = useCallback(async () => {
-    try { setMsgs(await supportApi.list()); window.dispatchEvent(new Event("support-seen")); } catch { setMsgs((m) => m ?? []); }
+    try {
+      const all = await supportApi.list();
+      lastId.current = all.length ? all[all.length - 1].id : 0;
+      setMsgs(all);
+      window.dispatchEvent(new Event("support-seen"));
+    } catch { setMsgs((m) => m ?? []); }
+  }, []);
+  // নতুন মেসেজ প্রতি ৩ সেকেন্ডে (শুধু নতুনগুলো আনে, তাই হালকা); পুরো তালিকা ২০ সেকেন্ডে একবার (মোছা/এডিট ধরতে)
+  const fresh = useCallback(async () => {
+    try {
+      const add = await supportApi.list(lastId.current || undefined);
+      if (!add.length) return;
+      lastId.current = add[add.length - 1].id;
+      setMsgs((m) => { const have = new Set((m ?? []).map((x) => x.id)); return [...(m ?? []), ...add.filter((x) => !have.has(x.id))]; });
+      window.dispatchEvent(new Event("support-seen"));
+    } catch { /* next tick */ }
   }, []);
   useEffect(() => {
     load();
-    const t = setInterval(() => { if (!document.hidden) load(); }, 15000);
-    return () => clearInterval(t);
-  }, [load]);
+    let n = 0;
+    const t = setInterval(() => { if (document.hidden) return; n += 1; if (n % 7 === 0) load(); else fresh(); }, 3000);
+    const vis = () => { if (!document.hidden) fresh(); };
+    document.addEventListener("visibilitychange", vis);
+    return () => { clearInterval(t); document.removeEventListener("visibilitychange", vis); };
+  }, [load, fresh]);
   useEffect(() => {
     if (msgs === null) return;
     if (first.current) { first.current = false; return; }

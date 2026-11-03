@@ -14,7 +14,7 @@ const pill = (tone: keyof typeof TONE, text: string) => (
 );
 
 export function OrderStatusBadge({ status }: { status: OrderStatus }) {
-  const tone = status === "delivered" ? "green" : status === "cancelled" ? "red" : status === "shipped" ? "blue" : "amber";
+  const tone = status === "delivered" ? "green" : status === "cancelled" ? "red" : status === "shipped" ? "blue" : status === "returned" ? "gray" : "amber";
   return pill(tone, ORDER_STATUS_LABEL[status] ?? status);
 }
 
@@ -24,6 +24,6 @@ export function PaymentStatusBadge({ status }: { status: PaymentStatus }) {
 }
 
 export function ReturnStatusBadge({ status }: { status: ReturnStatus }) {
-  const tone = status === "approved" || status === "refunded" ? "green" : status === "rejected" ? "red" : "amber";
+  const tone = status === "approved" || status === "refunded" || status === "received" ? "green" : status === "rejected" ? "red" : "amber";
   return pill(tone, RETURN_STATUS_LABEL[status] ?? status);
 }

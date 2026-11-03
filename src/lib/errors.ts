@@ -21,6 +21,7 @@ const MAP: Array<[RegExp, string]> = [
   [/Only customers who received/i, "পণ্যটি ডেলিভারি পাওয়ার পরেই রিভিউ দিতে পারবেন"],
   [/already reviewed/i, "আপনি এই পণ্যের রিভিউ আগেই দিয়েছেন"],
   [/Only delivered orders can be returned/i, "শুধু ডেলিভারি হওয়া অর্ডার রিটার্ন করা যায়"],
+  [/return request already exists/i, "এই অর্ডারে ইতিমধ্যে রিটার্নের আবেদন আছে, নতুন আবেদন করা যাবে না"],
   [/return request is already open/i, "এই অর্ডারে একটি রিটার্ন অনুরোধ আগেই চলমান"],
   [/can no longer be cancelled/i, "এই অর্ডার আর বাতিল করা যাবে না"],
   [/Paid orders must be cancelled/i, "পেইড অর্ডার বাতিল করতে সাপোর্টে যোগাযোগ করুন"],

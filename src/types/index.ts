@@ -76,7 +76,7 @@ export interface AddressIn {
 }
 export interface Address extends AddressIn { id: number }
 
-export type OrderStatus = "pending" | "confirmed" | "processing" | "shipped" | "delivered" | "cancelled";
+export type OrderStatus = "pending" | "confirmed" | "processing" | "shipped" | "delivered" | "cancelled" | "returned";
 export type PaymentStatus = "unpaid" | "pending_verification" | "paid" | "failed" | "refunded";
 // "cod" | "sslcommerz" | "pm_<id>" (admin এর যোগ করা bKash/Nagad/ব্যাংক) | পুরোনো "manual_bkash" / "manual_nagad"
 export type PayMethod = string;
@@ -88,6 +88,7 @@ export interface Order {
   payment_method: PayMethod;
   payment_label?: string | null;
   cancel_requested?: boolean;
+  return_info?: ReturnRequest | null;
   payment_status: PaymentStatus;
   subtotal: number;
   shipping_fee: number;
@@ -174,14 +175,26 @@ export interface MyReview {
   created_at: string;
 }
 
-export type ReturnStatus = "requested" | "approved" | "rejected" | "refunded";
+// requested -> approved -> pickup (কুরিয়ার) -> received (রিটার্ন সফল) -> refunded
+export type ReturnStatus = "requested" | "approved" | "pickup" | "received" | "refunded" | "rejected";
 export interface ReturnRequest {
   id: number;
   order_no: string;
   reason: string;
   status: ReturnStatus;
+  status_bn?: string;
   admin_note: string | null;
   created_at: string;
+  refund_bkash?: string | null;
+  courier?: string | null;
+  courier_status?: string | null;
+  courier_status_bn?: string | null;
+  received_at?: string | null;
+  refund_amount?: number | null;
+  refund_trx?: string | null;
+  refund_sender?: string | null;
+  refunded_at?: string | null;
+  total?: number;
 }
 
 export interface Suggestion { name: string; slug: string }

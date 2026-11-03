@@ -8,7 +8,7 @@ import { PageLoader } from "@/components/ui/Spinner";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { OrderBreakdown } from "./OrderBreakdown";
 import { OrderTimeline } from "./OrderTimeline";
-import { OrderStatusBadge } from "./StatusBadge";
+import { OrderStatusBadge, ReturnStatusBadge } from "./StatusBadge";
 import { ManualPayForm } from "./ManualPayForm";
 import { InvoiceModal } from "./InvoiceModal";
 import { ReturnModal } from "./ReturnModal";
@@ -40,6 +40,14 @@ export function OrderDetailView({ orderNo, placed, paid }: { orderNo: string; pl
   };
 
   useEffect(() => { if (ready) { load(); paymentsApi.options().then(setOptions).catch(() => {}); } /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [ready, orderNo]);
+
+  // শিপ হওয়ার পর বা রিটার্ন চলাকালে কুরিয়ারের অবস্থা লাইভ আপডেট (২০ সেকেন্ডে একবার, ট্যাব খোলা থাকলে)
+  const live = !!order && (order.status === "shipped" || (!!order.return_info && order.return_info.status !== "refunded" && order.return_info.status !== "rejected"));
+  useEffect(() => {
+    if (!live) return;
+    const t = setInterval(() => { if (document.visibilityState === "visible") ordersApi.detail(orderNo).then(setOrder).catch(() => {}); }, 20000);
+    return () => clearInterval(t);
+  }, [live, orderNo]);
 
   const act = async (name: string, fn: () => Promise<unknown>, okMsg: string) => {
     setBusy(name);
@@ -106,6 +114,29 @@ export function OrderDetailView({ orderNo, placed, paid }: { orderNo: string; pl
         <div className="rounded-xl bg-amber-50 p-4 text-sm font-medium text-amber-800">আপনার পেমেন্ট তথ্য যাচাই করা হচ্ছে। কনফার্ম হলে অর্ডার প্রক্রিয়া শুরু হবে।</div>
       )}
 
+      {order.return_info && (
+        <div className="rounded-2xl border border-line bg-white p-5 text-sm">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h3 className="font-bold">রিটার্ন ও রিফান্ড</h3>
+            <ReturnStatusBadge status={order.return_info.status} />
+          </div>
+          <p className="mt-2 text-muted">{order.return_info.reason}</p>
+          <div className="mt-3 grid gap-1.5 sm:grid-cols-2">
+            {order.return_info.refund_bkash && <p><span className="text-muted">রিফান্ডের বিকাশ নম্বর:</span> <b>{order.return_info.refund_bkash}</b></p>}
+            {order.return_info.courier && <p><span className="text-muted">পিকআপ কুরিয়ার:</span> <b className="capitalize">{order.return_info.courier}</b></p>}
+            {order.return_info.courier_status_bn && order.return_info.status === "pickup" && <p className="sm:col-span-2"><span className="text-muted">পিকআপের অবস্থা:</span> <b>{order.return_info.courier_status_bn}</b></p>}
+            {order.return_info.status === "refunded" && (
+              <>
+                <p><span className="text-muted">রিফান্ড:</span> <b>৳{Math.round(order.return_info.refund_amount ?? order.total).toLocaleString("en-US")}</b></p>
+                <p><span className="text-muted">TrxID:</span> <b>{order.return_info.refund_trx}</b></p>
+                {order.return_info.refund_sender && <p><span className="text-muted">যে নম্বর থেকে পাঠানো:</span> <b>{order.return_info.refund_sender}</b></p>}
+              </>
+            )}
+          </div>
+          {order.return_info.admin_note && <p className="mt-2 rounded-lg bg-brand-50/60 p-2.5"><b>আমাদের নোট:</b> {order.return_info.admin_note}</p>}
+        </div>
+      )}
+
       <div className="grid gap-5 md:grid-cols-[320px_1fr]">
         <div className="rounded-2xl border border-line bg-white p-5 md:self-start">
           <h3 className="mb-4 font-bold">অর্ডার ট্র্যাকিং</h3>
@@ -123,7 +154,7 @@ export function OrderDetailView({ orderNo, placed, paid }: { orderNo: string; pl
             বাতিলের অনুরোধ করুন
           </Button>
         )}
-        {order.status === "delivered" && <Button variant="soft" onClick={() => setRet(true)}><Icon name="return" className="h-4 w-4" /> রিটার্ন করুন</Button>}
+        {order.status === "delivered" && !order.return_info && <Button variant="soft" onClick={() => setRet(true)}><Icon name="return" className="h-4 w-4" /> রিটার্ন করুন</Button>}
       </div>
 
       <InvoiceModal orderNo={order.order_no} open={invoice} onClose={() => setInvoice(false)} />

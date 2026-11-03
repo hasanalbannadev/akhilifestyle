@@ -18,7 +18,7 @@ export function CartItemRow({ line }: { line: CartLine }) {
         <SmartImage src={line.image} alt={line.name} className="h-full w-full object-cover" />
       </Link>
       <div className="min-w-0 flex-1">
-        <Link href={`/product/${line.slug}`} className="line-clamp-2 font-medium hover:text-brand-600">{line.name}</Link>
+        <Link href={`/product/${line.slug}`} className="break-words font-medium hover:text-brand-600">{line.name}</Link>
         {line.color_name && (
           <p className="mt-0.5 flex items-center gap-1.5 text-xs text-muted">
             {line.color_hex && <i className="inline-block h-3 w-3 rounded-full border border-line" style={{ background: line.color_hex }} />}

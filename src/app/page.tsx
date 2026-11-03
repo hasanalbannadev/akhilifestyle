@@ -16,17 +16,20 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-// হোম পেজ: Banner -> Feature -> Category -> Best Seller -> Promo -> New Arrival
+// হোম পেজ: Banner -> Feature -> Category -> পণ্য (Best Seller আগে, তারপর নতুন) -> ডিল/অফার ব্যানার
 export default async function HomePage() {
   const [banners, promos, categories, best, fresh, offers] = await Promise.all([
     safe(catalogApi.banners(), []),
     safe(catalogApi.banners(120, "promo"), []),
     safe(catalogApi.categories(), []),
     safe(catalogApi.bestSellers(6), []),
-    safe(catalogApi.newArrivals(8), []),
+    safe(catalogApi.newArrivals(16), []),
     safe(catalogApi.offers(), []),
   ]);
   const topCategories = categories.filter((c) => !c.parent_id);
+  // একটাই "পণ্য" সেকশন: যেগুলো সবচেয়ে বেশি বিক্রি হয় (Best Seller) সেগুলো একদম শুরুতে, তারপর নতুন পণ্য।
+  const bestIds = new Set(best.map((p) => p.id));
+  const products = [...best, ...fresh.filter((p) => !bestIds.has(p.id))].slice(0, 16);
 
   return (
     <div className="space-y-2.5 md:space-y-3">
@@ -34,24 +37,18 @@ export default async function HomePage() {
       <FeatureStrip />
       <CategoryCircles categories={topCategories} />
 
-      {best.length > 0 && (
+      {products.length > 0 && (
         <section>
-          <SectionHeader title="বেস্ট সেলার" href="/shop" />
-          <ProductGrid products={best} cols="lg:grid-cols-6" />
+          <SectionHeader title="আমাদের পণ্য" href="/shop" />
+          <ProductGrid products={products} bestIds={bestIds} />
         </section>
       )}
 
+      {/* ডিল / অফার ব্যানার পণ্যের কার্ডের নিচে (admin এর Banners থেকে বদলানো যায়) */}
       {promos.length > 0 && <PromoBanners banners={promos} />}
       {offers.length > 0 ? <OfferBanners offers={offers} /> : promos.length === 0 && <PromoBanner />}
 
-      {fresh.length > 0 && (
-        <section>
-          <SectionHeader title="নতুন পণ্য" href="/shop?sort=new" />
-          <ProductGrid products={fresh} />
-        </section>
-      )}
-
-      {best.length === 0 && fresh.length === 0 && (
+      {products.length === 0 && (
         <p className="py-10 text-center text-muted">পণ্য শীঘ্রই যোগ করা হচ্ছে। একটু পরে আবার দেখুন।</p>
       )}
     </div>
