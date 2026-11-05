@@ -142,12 +142,13 @@ export interface Invoice {
   payment_status: string;
   courier: string | null;
   tracking_code: string | null;
+  consignment_id?: string | null;
 }
 
 export interface PayAccount {
   key: string; id: number; kind: "bkash" | "nagad" | "rocket" | "upay" | "bank" | "other"; title: string;
   account_number: string | null; account_name: string | null; bank_name: string | null; branch: string | null;
-  instructions: string | null;
+  instructions: string | null; delivery_free?: boolean;
 }
 export interface PaymentOptions {
   cod: { enabled: boolean };

@@ -93,7 +93,6 @@ function render(inv: Invoice, shop: Shop): HTMLCanvasElement[] {
   y += 40; hr(y);
   y += 26;
   text(`Payment: ${pay(inv.payment_method, inv.payment_label)} (${inv.payment_status === "paid" ? "Paid" : "Unpaid"})`, M, y, { size: 13, color: MUTED });
-  if (inv.tracking_code) text(`Tracking: ${inv.tracking_code}`, W - M, y, { size: 13, color: MUTED, align: "right" });
   y += 44;
   text(`Thank you for shopping with ${shop.name}!`, W / 2, y, { size: 13, color: MUTED, align: "center" });
 

@@ -33,19 +33,19 @@ export function ProductCard({ p, priority = false, best = false }: { p: Product;
   }
 
   return (
-    <article className="group flex flex-col rounded-lg border border-line bg-white p-2 transition-shadow hover:shadow-md">
-      <div className="relative overflow-hidden rounded-md bg-brand-50/60">
+    <article className="group flex flex-col rounded-xl border border-brand-100/70 bg-white p-2 shadow-[0_1px_3px_rgba(219,20,80,.06)] transition duration-200 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-[0_8px_22px_rgba(219,20,80,.14)]">
+      <div className="relative overflow-hidden rounded-lg bg-linear-to-br from-brand-50 to-white">
         <Link href={`/product/${p.slug}`} aria-label={p.name}>
           {/* key: রং বদলালে ছবি নতুন করে লোড হয় (আগের ছবি ফেল করলেও আটকে থাকে না) */}
           <SmartImage key={img} src={img} alt={p.name} priority={priority}
             className="aspect-square w-full object-cover transition-transform duration-300 group-hover:scale-105" />
         </Link>
         <WishlistButton productId={p.id} className="absolute right-1.5 top-1.5" />
-        {off > 0 && <span className="absolute left-1.5 top-1.5 rounded bg-brand-600 px-1 py-0.5 text-[10px] font-bold text-white">{off}%</span>}
-        {best && <span className={`absolute left-1.5 rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-bold leading-tight text-white ${p.stock < 1 ? "bottom-6" : "bottom-1.5"}`}>Best Seller</span>}
+        {off > 0 && <span className="absolute left-1.5 top-1.5 rounded-full bg-linear-to-r from-brand-500 to-brand-700 px-1.5 py-0.5 text-[10px] font-bold text-white shadow-sm">{off}%</span>}
+        {best && <span className={`absolute left-1.5 rounded-full bg-linear-to-r from-amber-500 to-red-600 px-2 py-0.5 text-[10px] font-bold leading-tight text-white shadow-sm ${p.stock < 1 ? "bottom-6" : "bottom-1.5"}`}>Best Seller</span>}
         {p.stock < 1 && <span className="absolute inset-x-0 bottom-0 bg-navy/70 py-0.5 text-center text-[11px] text-white">স্টক শেষ</span>}
       </div>
-      <Link href={`/product/${p.slug}`} className="mt-1.5 min-h-9 break-words text-[13px] font-medium leading-[18px] hover:text-brand-600">
+      <Link href={`/product/${p.slug}`} className="mt-1.5 min-h-9 break-words text-[13px] font-semibold leading-[18px] text-navy transition-colors hover:text-brand-600">
         {p.name}
       </Link>
       <div className="mt-0.5"><PriceTag price={p.price} compare={p.compare_at_price} /></div>
@@ -70,11 +70,11 @@ export function ProductCard({ p, priority = false, best = false }: { p: Product;
         {colors.length > 0 ? (
           soldOut && p.stock < 1
             ? <Button disabled variant="soft" size="sm" className="min-h-8 h-auto! w-full px-2 py-1 text-[13px] leading-tight">স্টক শেষ</Button>
-            : <Button size="sm" loading={busy} disabled={soldOut} onClick={addWithColor} className="min-h-8 h-auto! w-full px-2 py-1 text-[13px] leading-tight">
+            : <Button size="sm" loading={busy} disabled={soldOut} onClick={addWithColor} className="min-h-8 h-auto! w-full px-2 py-1 text-[13px] leading-tight rounded-lg bg-linear-to-r from-brand-500 to-brand-600 font-semibold shadow-sm shadow-brand-600/30 transition hover:from-brand-600 hover:to-brand-700 hover:shadow-md active:scale-[.98]">
                 {!busy && <Icon name="bag" className="h-4 w-4 shrink-0" />} কার্টে যোগ করুন
               </Button>
         ) : (
-          <AddToCartButton productId={p.id} stock={p.stock} className="min-h-8 h-auto! px-2 py-1 text-[13px] leading-tight" />
+          <AddToCartButton productId={p.id} stock={p.stock} className="min-h-8 h-auto! px-2 py-1 text-[13px] leading-tight rounded-lg bg-linear-to-r from-brand-500 to-brand-600 font-semibold shadow-sm shadow-brand-600/30 transition hover:from-brand-600 hover:to-brand-700 hover:shadow-md active:scale-[.98]" />
         )}
       </div>
     </article>

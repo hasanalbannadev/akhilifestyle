@@ -78,7 +78,7 @@ function Sheet({ inv, print = false }: { inv: Invoice; print?: boolean }) {
 
       <div className="mt-5 flex flex-wrap justify-between gap-2 border-t border-line pt-3 text-muted [break-inside:avoid]">
         <p>Payment: <b className="text-ink">{invPay(inv.payment_method, inv.payment_label)}</b> ({inv.payment_status === "paid" ? "Paid" : "Unpaid"})</p>
-        {inv.tracking_code && <p>Tracking: <b className="text-ink">{inv.tracking_code}</b></p>}
+        
       </div>
       <p className="mt-6 text-center text-muted">Thank you for shopping with {SITE.name}!</p>
     </div>

@@ -66,7 +66,11 @@ export default async function ProductPage({ params }: Props) {
   const cat = categories.find((c) => c.id === p.category_id);
   // প্রতিটি চালু পেমেন্ট পদ্ধতিতে এই পণ্যের ডেলিভারি চার্জ ফ্রি কিনা (অ্যাডমিনের টিক; টিক না থাকলে সাধারণ নিয়ম: ক্যাশ অন ডেলিভারিতে চার্জ, বাকিতে ফ্রি)
   const chosen = p.free_delivery_methods ?? [];
-  const isFree = (k: string) => (chosen.length ? chosen.includes(k) : k !== "cod");
+  const methodFree = (k: string) => {
+    const m = payOpts?.methods.find((x) => x.key === k);
+    return m ? m.delivery_free !== false : k !== "cod";   // অ্যাকাউন্টের নিজস্ব সেটিং; COD এ চার্জ, অনলাইনে ফ্রি
+  };
+  const isFree = (k: string) => (chosen.length ? chosen.includes(k) : methodFree(k));
   const payRows = payOpts ? [
     ...(payOpts.cod.enabled ? [{ k: "cod", name: "ক্যাশ অন ডেলিভারি" }] : []),
     ...(payOpts.sslcommerz.enabled ? [{ k: "sslcommerz", name: "অনলাইন (কার্ড/মোবাইল ব্যাংকিং)" }] : []),
