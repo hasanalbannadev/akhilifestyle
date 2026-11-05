@@ -39,10 +39,11 @@ export function AccountInfo({ m }: { m: PayAccount }) {
 }
 
 export function PaymentMethodPicker({
-  options, value, onChange, pay, onPay,
+  options, value, onChange, pay, onPay, free,
 }: {
   options: PaymentOptions | null; value: PayMethod | null; onChange: (m: PayMethod) => void;
   pay: PayInput; onPay: (p: PayInput) => void;
+  free?: Record<string, boolean>;   // পেমেন্ট মেথড অনুযায়ী ডেলিভারি ফ্রি কিনা
 }) {
   const methods = enabledMethods(options);
   const acct = (key: string) => options?.methods.find((m) => m.key === key);
@@ -61,10 +62,14 @@ export function PaymentMethodPicker({
               <label className={cn("flex cursor-pointer items-start gap-3 rounded-xl border-2 p-3.5", on ? "border-brand-600 bg-brand-50/60" : "border-line hover:border-brand-200")}>
                 <input type="radio" name="pay" className="mt-1 accent-brand-600" checked={on} onChange={() => onChange(m)} />
                 <span className="min-w-0 flex-1">
-                  <span className="block font-semibold">{a ? a.title : payLabel(m)}</span>
-                  {m === "cod" && <span className="text-sm text-muted">পণ্য হাতে পেয়ে টাকা দিন (ডেলিভারি চার্জ প্রযোজ্য)</span>}
-                  {m === "sslcommerz" && <span className="text-sm text-muted">কার্ড, bKash, Nagad, Rocket সহ অনলাইনে পেমেন্ট · ডেলিভারি চার্জ নেই</span>}
-                  {a && !on && <span className="text-sm text-muted">টাকা পাঠিয়ে TrxID দিন · ডেলিভারি চার্জ নেই</span>}
+                  <span className="flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold">{a ? a.title : payLabel(m)}
+                    {free && m in free && (free[m]
+                      ? <span className="rounded bg-emerald-600 px-1.5 py-0.5 text-[11px] font-bold leading-tight text-white">ফ্রি ডেলিভারি</span>
+                      : <span className="rounded border border-line px-1.5 py-0.5 text-[11px] font-medium leading-tight text-muted">ডেলিভারি চার্জ লাগবে</span>)}
+                  </span>
+                  {m === "cod" && <span className="text-sm text-muted">পণ্য হাতে পেয়ে টাকা দিন</span>}
+                  {m === "sslcommerz" && <span className="text-sm text-muted">কার্ড, bKash, Nagad, Rocket সহ অনলাইনে পেমেন্ট</span>}
+                  {a && !on && <span className="text-sm text-muted">টাকা পাঠিয়ে TrxID দিন</span>}
                 </span>
               </label>
               {a && on && (

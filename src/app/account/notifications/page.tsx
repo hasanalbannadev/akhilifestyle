@@ -17,8 +17,8 @@ const KEY = "akhi_notif_read";
 interface Item { id: string; text: string; href: string; date: string; icon: string }
 
 export default function NotificationsPage() {
-  const orders = useAsync(() => ordersApi.list());
-  const returns = useAsync(() => ordersApi.returns());
+  const orders = useAsync(() => ordersApi.list(), true, 3000);
+  const returns = useAsync(() => ordersApi.returns(), true, 3000);
   const [read, setRead] = useState<string[]>([]);
 
   useEffect(() => { try { setRead(JSON.parse(localStorage.getItem(KEY) || "[]")); } catch { /* ignore */ } }, []);

@@ -17,7 +17,7 @@ const TABS = [
 ];
 
 export default function OrdersPage() {
-  const { data, loading, error } = useAsync(() => ordersApi.list());
+  const { data, loading, error } = useAsync(() => ordersApi.list(), true, 3000);
   const [tab, setTab] = useState("all");
   const t = TABS.find((x) => x.id === tab)!;
   const list = (data ?? []).filter((o) => t.test(o.status));

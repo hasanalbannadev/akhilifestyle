@@ -9,6 +9,7 @@ import { errorMessage } from "@/lib/errors";
 import { formatDate, taka } from "@/lib/format";
 import { SITE } from "@/lib/site";
 import type { Invoice } from "@/types";
+import { downloadInvoice, shareInvoice } from "@/lib/invoicePdf";
 
 // একটি পরিষ্কার A4 ইনভয়েস। পর্দায় পপআপে দেখায়, প্রিন্টে শুধু এই ইনভয়েসটাই পুরো পাতায় ছাপা হয় (বাকি সাইট নয়)।
 // ইনভয়েসে সব লেখা ইংরেজি
@@ -93,6 +94,13 @@ export function InvoiceModal({ orderNo, open, onClose }: { orderNo: string; open
     ordersApi.invoice(orderNo).then(setInv).catch((e) => setError(errorMessage(e)));
   }, [open, inv, orderNo]);
 
+  const shop = { name: SITE.name, phone: SITE.phone, email: SITE.email };
+  const [note, setNote] = useState("");
+  const download = () => { try { downloadInvoice(inv!, shop); } catch { setNote("PDF তৈরি করা যায়নি"); } };
+  const share = async () => {
+    try { const r = await shareInvoice(inv!, shop); setNote(r === "downloaded" ? "এই ডিভাইসে শেয়ার সাপোর্ট নেই — PDF ডাউনলোড হয়েছে" : ""); }
+    catch { setNote("শেয়ার করা যায়নি"); }
+  };
   const print = () => {
     const cls = "printing-invoice";
     const done = () => { document.body.classList.remove(cls); window.removeEventListener("afterprint", done); };
@@ -109,7 +117,12 @@ export function InvoiceModal({ orderNo, open, onClose }: { orderNo: string; open
       {inv && (
         <div className="space-y-4">
           <Sheet inv={inv} />
-          <Button onClick={print} variant="outline">Print / Save PDF</Button>
+          <div className="flex flex-wrap gap-2">
+            <Button onClick={print} variant="outline">Print</Button>
+            <Button onClick={download} variant="outline">Download PDF</Button>
+            <Button onClick={share} variant="outline">Share</Button>
+          </div>
+          {note && <p className="text-sm text-muted">{note}</p>}
           {/* প্রিন্টের জন্য আলাদা কপি: পর্দায় লুকানো, প্রিন্টে পুরো A4 জুড়ে */}
           {createPortal(<div id="invoice-print-portal" className="hidden"><Sheet inv={inv} print /></div>, document.body)}
         </div>

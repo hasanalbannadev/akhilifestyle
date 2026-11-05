@@ -14,7 +14,7 @@ import { formatDate } from "@/lib/format";
 
 export default function ReturnsPage() {
   const toast = useToast();
-  const { data, loading, reload } = useAsync(() => ordersApi.returns());
+  const { data, loading, reload } = useAsync(() => ordersApi.returns(), true, 3000);
   const [open, setOpen] = useState<number | null>(null);
   const [detail, setDetail] = useState<Record<number, string>>({});
 

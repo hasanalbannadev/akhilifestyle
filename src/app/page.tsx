@@ -5,7 +5,6 @@ import { CategoryCircles } from "@/components/home/CategoryCircles";
 import { SectionHeader } from "@/components/home/SectionHeader";
 import { OfferBanners } from "@/components/home/OfferBanners";
 import { PromoBanners } from "@/components/home/PromoBanners";
-import { PromoBanner } from "@/components/home/PromoBanner";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { catalogApi } from "@/lib/api/catalog";
 import { safe } from "@/lib/api/safe";
@@ -46,7 +45,7 @@ export default async function HomePage() {
 
       {/* ডিল / অফার ব্যানার পণ্যের কার্ডের নিচে (admin এর Banners থেকে বদলানো যায়) */}
       {promos.length > 0 && <PromoBanners banners={promos} />}
-      {offers.length > 0 ? <OfferBanners offers={offers} /> : promos.length === 0 && <PromoBanner />}
+      {offers.length > 0 && <OfferBanners offers={offers} />}
 
       {products.length === 0 && (
         <p className="py-10 text-center text-muted">পণ্য শীঘ্রই যোগ করা হচ্ছে। একটু পরে আবার দেখুন।</p>

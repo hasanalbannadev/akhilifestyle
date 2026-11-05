@@ -19,7 +19,7 @@ function useSupportUnread(enabled: boolean) {
     let alive = true;
     const load = () => { if (!document.hidden) supportApi.unread().then((r) => alive && setN(r.count)).catch(() => {}); };
     load();
-    const t = setInterval(load, 8000);
+    const t = setInterval(load, 3000);
     const seen = () => setN(0);
     window.addEventListener("support-seen", seen);
     return () => { alive = false; clearInterval(t); window.removeEventListener("support-seen", seen); };

@@ -1,3 +1,4 @@
+import { CouponPopup } from "@/components/layout/CouponPopup";
 import type { Metadata, Viewport } from "next";
 import { Hind_Siliguri, Dancing_Script } from "next/font/google";
 import "./globals.css";
@@ -72,6 +73,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Footer />
           <MobileNav />
           <SupportFab />
+          <CouponPopup />
         </Providers>
       </body>
       

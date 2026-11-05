@@ -45,7 +45,7 @@ export function SupportChat() {
   useEffect(() => {
     load();
     let n = 0;
-    const t = setInterval(() => { if (document.hidden) return; n += 1; if (n % 7 === 0) load(); else fresh(); }, 3000);
+    const t = setInterval(() => { if (document.hidden) return; n += 1; if (n % 20 === 0) load(); else fresh(); }, 1000);
     const vis = () => { if (!document.hidden) fresh(); };
     document.addEventListener("visibilitychange", vis);
     return () => { clearInterval(t); document.removeEventListener("visibilitychange", vis); };

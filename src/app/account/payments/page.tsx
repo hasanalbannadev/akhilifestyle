@@ -11,7 +11,7 @@ import { formatDate, taka } from "@/lib/format";
 const STATUS: Record<string, string> = { pending: "যাচাই চলছে", approved: "গৃহীত", success: "সফল", rejected: "বাতিল", failed: "ব্যর্থ" };
 
 export default function PaymentHistoryPage() {
-  const { data, loading } = useAsync(() => paymentsApi.history());
+  const { data, loading } = useAsync(() => paymentsApi.history(), true, 15000);
   return (
     <>
       <PageTitle title="পেমেন্ট হিস্টরি" />

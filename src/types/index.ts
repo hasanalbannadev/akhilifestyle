@@ -14,6 +14,7 @@ export interface Product {
   stock: number;
   images: ProductImage[];
   colors?: ProductColor[];
+  free_delivery_methods?: string[];   // এই পেমেন্টে ডেলিভারি চার্জ ফ্রি (cod | sslcommerz | pm_<id>)
 }
 
 export interface Category {
@@ -31,7 +32,14 @@ export interface CategoryDetail { category: Category; children: Category[]; pare
 
 export interface Paged<T> { items: T[]; total: number; page: number; page_size: number }
 
-export interface Offer { id: number; title: string; slug: string; banner_url: string | null; percent: number; ends_at: string | null; product_count: number }
+export interface Offer {
+  id: number; title: string; slug: string; banner_url: string | null; percent: number; ends_at: string | null; product_count: number;
+  subtitle?: string | null; button_text?: string | null; link_url?: string | null;
+}
+export interface CouponPopup {
+  id: number; code: string; label: string; title: string | null; text: string | null; image: string | null;
+  button_text: string | null; link: string | null; seconds: number; min_subtotal: number;
+}
 export interface Banner {
   id: number; title: string | null; image_url: string | null; link_url: string | null;
   subtitle?: string | null; button_text?: string | null; placement?: "hero" | "promo";
@@ -56,6 +64,8 @@ export interface CartSummary {
   subtotal: number;
   discount: number;
   coupon_error: string | null;
+  coupon_note?: string | null;
+  free_by_method?: Record<string, boolean>;   // কোন পেমেন্টে এই কার্টের ডেলিভারি ফ্রি
   shipping_fee: number | null;
   total: number;
   count: number;

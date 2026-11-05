@@ -1,6 +1,6 @@
 // কার্ট (guest ও চলবে, X-Cart-Token দিয়ে) + কুপন
 import { api } from "./client";
-import type { CartSummary, CartView } from "@/types";
+import type { CartSummary, CartView, CouponPopup } from "@/types";
 
 export const cartApi = {
   get: () => api<CartView>("/cart", { cart: true }),
@@ -14,6 +14,7 @@ export const cartApi = {
   clear: () => api<CartView>("/cart", { method: "DELETE", cart: true }),
   summary: (district?: string, coupon_code?: string, payment_method?: string) =>
     api<CartSummary>("/cart/summary", { cart: true, query: { district, coupon_code, payment_method } }),
+  couponPopup: () => api<CouponPopup | null>("/coupons/popup"),
   validateCoupon: (code: string, subtotal: number) =>
     api<{ code: string; discount: number }>("/coupons/validate", { method: "POST", body: { code, subtotal } }),
 };

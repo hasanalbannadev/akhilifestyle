@@ -125,8 +125,8 @@ export default function CheckoutPage() {
           <div className="min-w-0 space-y-5">
             <AddressPicker addresses={addresses} selectedId={addressId} userPhone={user.phone}
               onSelect={setAddressId} onAdded={(a) => { setAddresses((l) => [...l, a]); setAddressId(a.id); }} />
-            <PaymentMethodPicker options={options} value={method} onChange={setMethod} pay={pay} onPay={setPay} />
-            <CouponBox applied={coupon} subtotal={cart.subtotal} onApply={setCoupon} />
+            <PaymentMethodPicker options={options} value={method} onChange={setMethod} pay={pay} onPay={setPay} free={summary?.free_by_method} />
+            <CouponBox applied={coupon} subtotal={cart.subtotal} note={summary?.coupon_note} onApply={setCoupon} />
             <section className="rounded-2xl border border-line bg-white p-5">
               <Textarea label="অর্ডার নোট (ঐচ্ছিক)" value={note} onChange={(e) => setNote(e.target.value)} placeholder="ডেলিভারি নিয়ে কিছু বলার থাকলে লিখুন" maxLength={300} />
             </section>

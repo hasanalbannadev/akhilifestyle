@@ -45,7 +45,7 @@ export function OrderDetailView({ orderNo, placed, paid }: { orderNo: string; pl
   const live = !!order && (order.status === "shipped" || (!!order.return_info && order.return_info.status !== "refunded" && order.return_info.status !== "rejected"));
   useEffect(() => {
     if (!live) return;
-    const t = setInterval(() => { if (document.visibilityState === "visible") ordersApi.detail(orderNo).then(setOrder).catch(() => {}); }, 20000);
+    const t = setInterval(() => { if (document.visibilityState === "visible") ordersApi.detail(orderNo).then(setOrder).catch(() => {}); }, 3000);
     return () => clearInterval(t);
   }, [live, orderNo]);
 
