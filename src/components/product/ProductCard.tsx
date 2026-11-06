@@ -57,13 +57,13 @@ export function ProductCard({ p, priority = false, best = false }: { p: Product;
               <button key={c.id} type="button" role="radio" aria-checked={on} aria-label={c.name} title={c.name}
                 disabled={c.stock < 1}
                 onClick={() => setColorId(on ? null : c.id)}
-                className={`h-[18px] w-[18px] rounded-full border border-black/15 transition disabled:cursor-not-allowed disabled:opacity-30 ${
-                  on ? "ring-2 ring-brand-600 ring-offset-1" : "hover:scale-110"}`}
+                className={`h-[22px] w-[22px] rounded-full border border-black/30 transition disabled:cursor-not-allowed disabled:opacity-30 ${
+                  on ? "ring-2 ring-ink ring-offset-2 scale-110" : "hover:scale-110"}`}
                 style={{ background: c.hex || "#ddd" }} />
             );
           })}
           {colors.length > 6 && <span className="text-[11px] text-muted">+{colors.length - 6}</span>}
-          {color && <span className="text-[11px] text-muted">{color.name}</span>}
+          {color ? <span className="text-[13px] font-bold text-black">Color: {color.name}</span> : <span className="text-xs font-medium text-black/70">Select color</span>}
         </div>
       )}
       <div className="mt-auto pt-2">

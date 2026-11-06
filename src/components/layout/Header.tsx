@@ -158,7 +158,7 @@ export function Header({ categories }: { categories: Category[] }) {
           {user && <IconLink href="/account/support" label="মেসেজ" icon="chat" badge={unread} />}
           {user?.avatar_url ? (
             <Link href="/account" aria-label="অ্যাকাউন্ট" className="grid h-9 w-9 max-[359px]:h-8 max-[359px]:w-8 place-items-center sm:h-10 sm:w-10">
-              <span className="block h-7 w-7 overflow-hidden rounded-full ring-2 ring-brand-100"><SmartImage src={user.avatar_url} alt="" className="h-full w-full object-cover" /></span>
+              <span className="block h-7 w-7 overflow-hidden rounded-full ring-2 ring-brand-100"><SmartImage key={user.avatar_url} src={user.avatar_url} alt="" className="h-full w-full object-cover" /></span>
             </Link>
           ) : <IconLink href={user ? "/account" : "/login"} label="অ্যাকাউন্ট" icon="user" />}
           <IconLink href="/account/wishlist" label="পছন্দের তালিকা" icon="heart" badge={ids.size} hideSm />

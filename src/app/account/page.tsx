@@ -52,7 +52,7 @@ export default function ProfilePage() {
       <div className="mb-5 flex items-center gap-4 rounded-2xl border border-line bg-white p-5">
         <button type="button" onClick={() => fileRef.current?.click()} disabled={picBusy} aria-label="প্রোফাইল ছবি বদলান"
           className="group relative h-16 w-16 shrink-0 overflow-hidden rounded-full bg-brand-100 text-2xl font-bold text-brand-600 disabled:opacity-60">
-          {user?.avatar_url ? <SmartImage src={user.avatar_url} alt="প্রোফাইল ছবি" className="h-full w-full object-cover" /> : <span className="grid h-full w-full place-items-center">{(user?.name || "A").charAt(0).toUpperCase()}</span>}
+          {user?.avatar_url ? <SmartImage key={user.avatar_url} src={user.avatar_url} alt="প্রোফাইল ছবি" className="h-full w-full object-cover" /> : <span className="grid h-full w-full place-items-center">{(user?.name || "A").charAt(0).toUpperCase()}</span>}
           <span className="absolute inset-x-0 bottom-0 bg-black/55 py-0.5 text-center text-[10px] font-medium text-white">{picBusy ? "…" : "বদলান"}</span>
         </button>
         <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={pickPic} />

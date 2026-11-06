@@ -44,6 +44,17 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* বড় স্ক্রিনে কনটেন্টের দু'পাশের ফাঁকা জায়গায় হালকা আর্চ-স্টাইল ব্যাকগ্রাউন্ড; কনটেন্টের ভেতরটা আগের মতোই সাদা */
+@media (min-width: 1400px) {
+  body {
+    background-color: #fdf4f7;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='170' viewBox='0 0 120 170'><g fill='none' stroke='%23e8a6bc' stroke-opacity='.45' stroke-width='1.5'><path d='M12 170V70a48 48 0 0 1 96 0v100'/><path d='M28 170V72a32 32 0 0 1 64 0v98'/></g></svg>");
+    background-size: 120px 170px;
+    background-attachment: fixed;
+  }
+  main.container-x { background: #fff; box-shadow: 0 0 0 1px rgba(232, 166, 188, .25), 0 10px 40px rgba(219, 20, 80, .06); }
+}
+
 /* কীবোর্ড দিয়ে চললে ফোকাস দেখা যাবে */
 :focus-visible { outline: 2px solid var(--color-brand-500); outline-offset: 2px; }
 

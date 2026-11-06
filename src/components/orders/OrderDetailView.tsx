@@ -154,6 +154,11 @@ export function OrderDetailView({ orderNo, placed, paid }: { orderNo: string; pl
             বাতিলের অনুরোধ করুন
           </Button>
         )}
+        {order.cancel_requested && order.status !== "cancelled" && (
+          <span className="inline-flex min-h-9 items-center gap-1.5 rounded-lg bg-amber-50 px-3 text-sm font-semibold text-amber-800">
+            <Icon name="info" className="h-4 w-4" /> বাতিলের আবেদন করা হয়েছে
+          </span>
+        )}
         {order.status === "delivered" && !order.return_info && <Button variant="soft" onClick={() => setRet(true)}><Icon name="return" className="h-4 w-4" /> রিটার্ন করুন</Button>}
       </div>
 
