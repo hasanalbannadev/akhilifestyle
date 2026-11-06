@@ -14,6 +14,17 @@ import type { Product } from "@/types";
 
 // পণ্যের কার্ড (হোম, ক্যাটাগরি, রিলেটেড সব জায়গায় একই)।
 // রং থাকলে: রং বাটন (radio) চাপলে সেই রং বাছাই হয় ও কার্ডের ছবি সেই রঙের ছবি হয়ে যায়।
+/** হালকা রঙের উপর কালো টিক, গাঢ় রঙের উপর সাদা টিক */
+function isLight(hex?: string | null): boolean {
+  const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec((hex || "").trim());
+  if (!m) return true;
+  let h = m[1];
+  if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+  const n = parseInt(h, 16);
+  const lum = (0.299 * ((n >> 16) & 255) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255;
+  return lum > 0.6;
+}
+
 export function ProductCard({ p, priority = false, best = false }: { p: Product; priority?: boolean; best?: boolean }) {
   const off = discountPercent(p.price, p.compare_at_price);
   const colors = p.colors ?? [];
@@ -57,13 +68,19 @@ export function ProductCard({ p, priority = false, best = false }: { p: Product;
               <button key={c.id} type="button" role="radio" aria-checked={on} aria-label={c.name} title={c.name}
                 disabled={c.stock < 1}
                 onClick={() => setColorId(on ? null : c.id)}
-                className={`h-[22px] w-[22px] rounded-full border border-black/30 transition disabled:cursor-not-allowed disabled:opacity-30 ${
-                  on ? "ring-2 ring-ink ring-offset-2 scale-110" : "hover:scale-110"}`}
-                style={{ background: c.hex || "#ddd" }} />
+                className={`flex h-6 w-6 items-center justify-center rounded-full border border-black/25 transition disabled:cursor-not-allowed disabled:opacity-30 ${
+                  on ? "ring-2 ring-ink ring-offset-2" : "hover:scale-110"}`}
+                style={{ background: c.hex || "#ddd" }}>
+                {on && (
+                  <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke={isLight(c.hex) ? "#111" : "#fff"} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M3.5 8.5l3 3 6-7" />
+                  </svg>
+                )}
+              </button>
             );
           })}
           {colors.length > 6 && <span className="text-[11px] text-muted">+{colors.length - 6}</span>}
-          {color ? <span className="text-[13px] font-bold text-black">Color: {color.name}</span> : <span className="text-xs font-medium text-black/70">Select color</span>}
+          {color && <span className="text-[13px] font-bold text-black">{color.name}</span>}
         </div>
       )}
       <div className="mt-auto pt-2">
