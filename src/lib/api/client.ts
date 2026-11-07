@@ -3,6 +3,7 @@
 // - X-Cart-Token header (cart এর জন্য)
 // - error handling
 import { tokenStore } from "@/lib/auth-storage";
+import { bump } from "@/lib/store";
 import { getCartToken } from "@/lib/cart-token";
 
 export const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1").replace(/\/$/, "");
@@ -78,6 +79,7 @@ export async function api<T>(path: string, opts: ApiOptions = {}): Promise<T> {
     throw new ApiError("সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না। ইন্টারনেট চেক করে আবার চেষ্টা করুন।", 0);
   }
 
+  if (res.ok && method !== "GET" && typeof window !== "undefined") setTimeout(bump, 150);   // কিছু বদলেছে: খোলা সব স্ক্রিন নিজে আপডেট হবে
   if (res.status === 204) return undefined as T;
   let data: unknown = null;
   try { data = await res.json(); } catch { /* body নেই */ }

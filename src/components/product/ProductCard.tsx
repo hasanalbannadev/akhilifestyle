@@ -68,11 +68,11 @@ export function ProductCard({ p, priority = false, best = false }: { p: Product;
               <button key={c.id} type="button" role="radio" aria-checked={on} aria-label={c.name} title={c.name}
                 disabled={c.stock < 1}
                 onClick={() => setColorId(on ? null : c.id)}
-                className={`flex h-6 w-6 items-center justify-center rounded-full border border-black/25 transition disabled:cursor-not-allowed disabled:opacity-30 ${
-                  on ? "ring-2 ring-ink ring-offset-2" : "hover:scale-110"}`}
+                className={`flex h-[22px] w-[22px] items-center justify-center rounded-full border border-black/15 transition disabled:cursor-not-allowed disabled:opacity-30 ${
+                  on ? "ring-1 ring-black/70 ring-offset-2" : "hover:ring-1 hover:ring-black/30 hover:ring-offset-2"}`}
                 style={{ background: c.hex || "#ddd" }}>
                 {on && (
-                  <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke={isLight(c.hex) ? "#111" : "#fff"} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" className="h-3 w-3" fill="none" stroke={isLight(c.hex) ? "#111" : "#fff"} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M3.5 8.5l3 3 6-7" />
                   </svg>
                 )}
@@ -80,7 +80,7 @@ export function ProductCard({ p, priority = false, best = false }: { p: Product;
             );
           })}
           {colors.length > 6 && <span className="text-[11px] text-muted">+{colors.length - 6}</span>}
-          {color && <span className="text-[13px] font-bold text-black">{color.name}</span>}
+          {color && <span className="text-[13px] font-semibold text-black">{color.name}</span>}
         </div>
       )}
       <div className="mt-auto pt-2">
