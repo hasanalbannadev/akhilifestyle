@@ -3,8 +3,9 @@
 // - X-Cart-Token header (cart এর জন্য)
 // - error handling
 import { tokenStore } from "@/lib/auth-storage";
-import { bump } from "@/lib/store";
+import { bump, busy } from "@/lib/store";
 import { getCartToken } from "@/lib/cart-token";
+import { shrinkForm } from "@/lib/compress";
 
 export const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1").replace(/\/$/, "");
 // ছবির জন্য: API_URL থেকে /api/v1 বাদ দিলে server এর মূল ঠিকানা (যেখানে /uploads আছে)
@@ -56,6 +57,7 @@ export async function api<T>(path: string, opts: ApiOptions = {}): Promise<T> {
   const { method = "GET", body, query, auth, cart, revalidate, signal } = opts;
   const headers: Record<string, string> = { Accept: "application/json" };
   const isForm = typeof FormData !== "undefined" && body instanceof FormData;
+  const sendBody = isForm ? await shrinkForm(body as FormData) : body;
   if (body !== undefined && !isForm) headers["Content-Type"] = "application/json";
   if (auth) {
     const t = tokenStore.get();
@@ -67,15 +69,19 @@ export async function api<T>(path: string, opts: ApiOptions = {}): Promise<T> {
     method,
     headers,
     signal,
-    body: body === undefined ? undefined : isForm ? (body as FormData) : JSON.stringify(body),
+    body: body === undefined ? undefined : isForm ? (sendBody as FormData) : JSON.stringify(body),
   };
   if (typeof window === "undefined" && method === "GET" && revalidate) init.next = { revalidate };
   else init.cache = "no-store";
 
   let res: Response;
+  const track = method !== "GET" && typeof window !== "undefined";
+  if (track) busy(1);
   try {
     res = await fetch(buildUrl(path, query), init);
+    if (track) setTimeout(() => busy(-1), 700);
   } catch {
+    if (track) busy(-1);
     throw new ApiError("সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না। ইন্টারনেট চেক করে আবার চেষ্টা করুন।", 0);
   }
 

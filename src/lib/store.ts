@@ -20,3 +20,14 @@ function subscribe(f: () => void) {
 export function useRevision() {
   return useSyncExternalStore(subscribe, () => revision, () => 0);
 }
+
+// কোনো সেভ/বাটন চাপলে ওপরে ছোট লোডিং বার ঘোরে, নতুন তথ্য আসা পর্যন্ত
+let pending = 0;
+const bsubs = new Set<() => void>();
+export function busy(delta: number) {
+  pending = Math.max(0, pending + delta);
+  bsubs.forEach((f) => f());
+}
+export function useBusy() {
+  return useSyncExternalStore((f) => { bsubs.add(f); return () => { bsubs.delete(f); }; }, () => pending > 0, () => false);
+}

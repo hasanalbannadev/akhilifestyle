@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withOg } from "@/lib/seo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
@@ -21,14 +22,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   try {
     const { category } = await catalogApi.categoryDetail(slug);
-    return {
+    return withOg({
       title: category.name,
       description: `${SITE.name} এর ${category.name} কালেকশন দেখুন। সেরা দামে, সারা বাংলাদেশে ডেলিভারি।`,
       alternates: { canonical: `/category/${slug}` },
-      openGraph: { title: `${category.name} | ${SITE.name}` },
-    };
+    });
   } catch {
-    return { title: "ক্যাটাগরি" };
+    return withOg({ title: "ক্যাটাগরি", alternates: { canonical: `/category/${slug}` } });
   }
 }
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withOg } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { SmartImage } from "@/components/ui/SmartImage";
@@ -22,8 +23,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   try {
     const { offer } = await catalogApi.offer(slug);
-    return { title: `${offer.title} - ${offer.percent}% ছাড়`, description: `${SITE.name} এর ${offer.title} অফার। ${offer.percent}% পর্যন্ত ছাড়।`, alternates: { canonical: `/offers/${slug}` } };
-  } catch { return { title: "অফার" }; }
+    return withOg({ title: `${offer.title} - ${offer.percent}% ছাড়`, description: `${SITE.name} এর ${offer.title} অফার। ${offer.percent}% পর্যন্ত ছাড়।`, alternates: { canonical: `/offers/${slug}` } });
+  } catch { return withOg({ title: "অফার", alternates: { canonical: `/offers/${slug}` } }); }
 }
 
 export default async function OfferPage({ params }: Props) {

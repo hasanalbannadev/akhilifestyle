@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withOg } from "@/lib/seo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
@@ -48,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       twitter: { card: "summary_large_image", title: p.name, description: desc, images: img ? [img] : undefined },
     };
   } catch {
-    return { title: "পণ্য পাওয়া যায়নি" };
+    return withOg({ title: "পণ্য", alternates: { canonical: `/product/${slug}` } });
   }
 }
 

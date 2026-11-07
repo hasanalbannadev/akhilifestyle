@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { withOg } from "@/lib/seo";
 import { StaticPage } from "@/components/layout/StaticPage";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg({
   title: "আমাদের সম্পর্কে",
   description: "Akhi Lifestyle - আপনার পছন্দের স্টাইলিশ অ্যাক্সেসরিজের অনলাইন শপ।",
   alternates: { canonical: "/about" },
-};
+});
 
 export default function Page() {
   return (

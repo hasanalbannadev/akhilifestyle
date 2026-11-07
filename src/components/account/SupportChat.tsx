@@ -48,7 +48,9 @@ export function SupportChat() {
     const t = setInterval(() => { if (document.hidden) return; n += 1; if (n % 20 === 0) load(); else fresh(); }, 1000);
     const vis = () => { if (!document.hidden) fresh(); };
     document.addEventListener("visibilitychange", vis);
-    return () => { clearInterval(t); document.removeEventListener("visibilitychange", vis); };
+    const rt = () => { fresh(); };
+    window.addEventListener("rt-push", rt);
+    return () => { clearInterval(t); document.removeEventListener("visibilitychange", vis); window.removeEventListener("rt-push", rt); };
   }, [load, fresh]);
   useEffect(() => {
     if (msgs === null) return;

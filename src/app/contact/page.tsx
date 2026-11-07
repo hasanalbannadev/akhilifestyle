@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import { withOg } from "@/lib/seo";
 import { StaticPage } from "@/components/layout/StaticPage";
 import { ContactCards } from "@/components/layout/ContactCards";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg({
   title: "যোগাযোগ",
   description: "Akhi Lifestyle এর সাথে যোগাযোগ করুন - ফোন, ইমেইল ও Messenger।",
   alternates: { canonical: "/contact" },
-};
+});
 
 export default function ContactPage() {
   return (

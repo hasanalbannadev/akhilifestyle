@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { withOg } from "@/lib/seo";
 import { StaticPage } from "@/components/layout/StaticPage";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg({
   title: "প্রাইভেসি পলিসি",
   description: "আমরা আপনার তথ্য কীভাবে সংগ্রহ ও ব্যবহার করি।",
   alternates: { canonical: "/privacy" },
-};
+});
 
 export default function Page() {
   return (

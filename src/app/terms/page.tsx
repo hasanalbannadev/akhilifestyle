@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { withOg } from "@/lib/seo";
 import { StaticPage } from "@/components/layout/StaticPage";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg({
   title: "শর্তাবলি",
   description: "Akhi Lifestyle ব্যবহারের শর্তাবলি।",
   alternates: { canonical: "/terms" },
-};
+});
 
 export default function Page() {
   return (

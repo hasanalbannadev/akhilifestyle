@@ -3,6 +3,7 @@ import { SITE } from "@/lib/site";
 import { imageUrl } from "@/lib/image";
 import { stripHtml } from "@/lib/format";
 import type { Product } from "@/types";
+import type { Metadata } from "next";
 
 export const absUrl = (path: string) => `${SITE.url}${path.startsWith("/") ? path : "/" + path}`;
 
@@ -57,4 +58,19 @@ export function breadcrumbJsonLd(items: { name: string; path: string }[]) {
       "@type": "ListItem", position: i + 1, name: it.name, item: absUrl(it.path),
     })),
   };
+}
+
+// প্রতি পেজের নিজস্ব title/description/url দিয়ে og + twitter বানায়।
+// (না দিলে Next হোমপেজের og:title/og:url inherit করে → WhatsApp/Facebook এ সব লিংকে একই প্রিভিউ দেখায়)
+export function withOg(m: Metadata, path?: string): Metadata {
+  const t = typeof m.title === "string" ? m.title : SITE.name;
+  const title = t.includes(SITE.name) ? t : `${t} | ${SITE.name}`;
+  const canon = path ?? (m.alternates?.canonical as string | undefined);
+  const desc = (m.description as string | undefined) ?? SITE.description;
+  const og = (m.openGraph ?? {}) as Record<string, unknown>;
+  return {
+    ...m,
+    openGraph: { type: "website", locale: "bn_BD", siteName: SITE.name, title, description: desc, ...(canon ? { url: canon } : {}), ...og },
+    twitter: { card: "summary_large_image", title, description: desc, ...(m.twitter ?? {}) },
+  } as Metadata;
 }

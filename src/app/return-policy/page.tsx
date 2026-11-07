@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { withOg } from "@/lib/seo";
 import { StaticPage } from "@/components/layout/StaticPage";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withOg({
   title: "রিটার্ন ও রিফান্ড পলিসি",
   description: "পণ্য রিটার্ন ও রিফান্ডের নিয়ম।",
   alternates: { canonical: "/return-policy" },
-};
+});
 
 export default function Page() {
   return (
