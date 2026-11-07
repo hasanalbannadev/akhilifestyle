@@ -1,4 +1,5 @@
 // Guest cart এর জন্য browser এ একটা UUID রাখা হয়, যেটা X-Cart-Token header এ যায়।
+import { safeStorage } from "@/lib/safe-storage";
 const KEY = "akhi_cart_token";
 
 function makeId(): string {
@@ -8,14 +9,10 @@ function makeId(): string {
 
 export function getCartToken(): string {
   if (typeof window === "undefined") return "";
-  try {
-    let t = window.localStorage.getItem(KEY);
-    if (!t || t.length < 16) {
-      t = makeId();
-      window.localStorage.setItem(KEY, t);
-    }
-    return t;
-  } catch {
-    return makeId();
+  let t = safeStorage.get(KEY);
+  if (!t || t.length < 16) {
+    t = makeId();
+    safeStorage.set(KEY, t);
   }
+  return t;
 }

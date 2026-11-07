@@ -4,6 +4,7 @@ import { startRealtime } from "@/lib/realtime";
 import { tokenStore } from "@/lib/auth-storage";
 import { useAuth } from "./AuthContext";
 import { useBusy } from "@/lib/store";
+import { InAppBanner } from "@/components/layout/InAppBanner";
 import { ToastProvider } from "./ToastContext";
 import { AuthProvider } from "./AuthContext";
 import { CartProvider } from "./CartContext";
@@ -32,7 +33,7 @@ export function Providers({ children }: { children: ReactNode }) {
     <ToastProvider>
       <AuthProvider>
         <CartProvider>
-          <WishlistProvider><Realtime /><TopBar />{children}</WishlistProvider>
+          <WishlistProvider><Realtime /><TopBar /><InAppBanner />{children}</WishlistProvider>
         </CartProvider>
       </AuthProvider>
     </ToastProvider>
