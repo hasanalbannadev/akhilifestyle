@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Field";
 import { ChatComposer } from "./ChatComposer";
@@ -9,6 +9,21 @@ import { supportApi } from "@/lib/api/support";
 import { errorMessage } from "@/lib/errors";
 import { formatDate } from "@/lib/format";
 import type { SupportMsg } from "@/types";
+
+// প্রথমবার চ্যাট খুললে, বা শেষ মেসেজের পর এতক্ষণ পার হলে (ঘণ্টা) আবার স্বাগত বার্তা দেখায়। এটা শুধু দেখানো হয়, ডাটাবেসে সেভ হয় না।
+const GREET_AFTER_HOURS = 6;
+const GREETING = "আসসালামু আলাইকুম! 🛍️ Akhi Lifestyle-এ আপনাকে স্বাগতম।\nআপনার পছন্দের ব্যাগ, অ্যাকসেসরিজ আর আরও অনেক কিছু এখন এক জায়গায়। ✨\nShop Smart • Live Stylish\nপণ্য, দাম, অর্ডার বা ডেলিভারি নিয়ে যা জানতে চান, এখানেই লিখুন। ছবিও দিতে পারেন।\nআমাদের এজেন্ট খুব শীঘ্রই আপনার সাথে যোগাযোগ করবে 💖";
+
+function Greeting() {
+  return (
+    <div className="flex justify-start">
+      <div className="max-w-[85%] rounded-2xl bg-brand-50 px-3.5 py-2 text-sm text-ink">
+        <p className="mb-0.5 text-xs font-bold text-brand-600">Akhi Lifestyle</p>
+        <p className="whitespace-pre-wrap break-words">{GREETING}</p>
+      </div>
+    </div>
+  );
+}
 
 // আমাদের সাথে সরাসরি মেসেজ। ছবি দেওয়া যায় (সর্বোচ্চ ৩টা)। নিজের মেসেজ এডিট করা যায়, মোছা যায় না।
 export function SupportChat() {
@@ -22,12 +37,20 @@ export function SupportChat() {
   const [ePhotos, setEPhotos] = useState<string[]>([]);
   const endRef = useRef<HTMLDivElement>(null);
   const first = useRef(true);
+  const [greetAfter, setGreetAfter] = useState<number | null>(null);   // কোন মেসেজের পরে স্বাগত বার্তা বসবে (০ = সবার আগে)
+  const greeted = useRef(false);
 
   const lastId = useRef(0);
   const load = useCallback(async () => {
     try {
       const all = await supportApi.list();
       lastId.current = all.length ? all[all.length - 1].id : 0;
+      if (!greeted.current) {
+        greeted.current = true;
+        const last = all.length ? all[all.length - 1] : null;
+        const old = last ? Date.now() - new Date(last.created_at).getTime() > GREET_AFTER_HOURS * 3600 * 1000 : true;
+        if (old) setGreetAfter(last ? last.id : 0);
+      }
       setMsgs(all);
       window.dispatchEvent(new Event("support-seen"));
     } catch { setMsgs((m) => m ?? []); }
@@ -82,11 +105,14 @@ export function SupportChat() {
       </div>
       <div className="max-h-[55vh] min-h-32 space-y-3 overflow-y-auto p-4" aria-live="polite">
         {msgs === null ? <p className="text-center text-sm text-muted">লোড হচ্ছে…</p>
-          : msgs.length === 0 ? <p className="text-center text-sm text-muted">এখনো কোনো মেসেজ নেই।</p>
-          : msgs.map((m) => {
+          : msgs.length === 0 && greetAfter === null ? <p className="text-center text-sm text-muted">এখনো কোনো মেসেজ নেই।</p>
+          : <>
+            {greetAfter === 0 && <Greeting />}
+            {msgs.map((m) => {
             const mine = m.sender === "customer";
             return (
-              <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
+              <Fragment key={m.id}>
+              <div className={`flex ${mine ? "justify-end" : "justify-start"}`}>
                 <div className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-sm ${mine ? "bg-brand-600 text-white" : "bg-brand-50 text-ink"}`}>
                   {!mine && <p className="mb-0.5 text-xs font-bold text-brand-600">Akhi Lifestyle</p>}
                   {editing?.id === m.id ? (
@@ -110,8 +136,11 @@ export function SupportChat() {
                   )}
                 </div>
               </div>
+              {greetAfter === m.id && <Greeting />}
+              </Fragment>
             );
           })}
+          </>}
         <div ref={endRef} />
       </div>
       <ChatComposer text={text} onText={setText} photos={photos} onPhotos={setPhotos} busy={busy} onSend={() => send()}
