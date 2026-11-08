@@ -14,6 +14,8 @@ export function ChatComposer({ text, onText, photos, onPhotos, busy, onSend, upl
 }) {
   const toast = useToast();
   const file = useRef<HTMLInputElement>(null);
+  const cam = useRef<HTMLInputElement>(null);
+  const [menu, setMenu] = useState(false);
   const [up, setUp] = useState(false);
   const can = (text.trim() || photos.length) && !busy && !up;
 
@@ -46,10 +48,23 @@ export function ChatComposer({ text, onText, photos, onPhotos, busy, onSend, upl
         </div>
       )}
       <div className="flex items-end gap-2">
-        <button type="button" aria-label="ছবি যোগ করুন" title="ছবি যোগ করুন" disabled={photos.length >= max || up} onClick={() => file.current?.click()}
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-line text-brand-600 hover:bg-brand-50 disabled:opacity-40">
-          {up ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-brand-600 border-t-transparent" /> : <Icon name="plus" className="h-5 w-5" />}
-        </button>
+        <div className="relative shrink-0">
+          <button type="button" aria-label="ছবি যোগ করুন" title="ছবি যোগ করুন" disabled={photos.length >= max || up} onClick={() => setMenu((v) => !v)}
+            className="grid h-11 w-11 place-items-center rounded-full border border-line text-brand-600 hover:bg-brand-50 disabled:opacity-40">
+            {up ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-brand-600 border-t-transparent" /> : <Icon name="plus" className="h-5 w-5" />}
+          </button>
+          {menu && (
+            <>
+              <div className="fixed inset-0 z-10" onClick={() => setMenu(false)} />
+              <div className="absolute bottom-12 left-0 z-20 w-44 overflow-hidden rounded-xl border border-line bg-white shadow-lg">
+                <button type="button" onClick={() => { setMenu(false); cam.current?.click(); }}
+                  className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm hover:bg-brand-50"><Icon name="camera" className="h-4 w-4" /> ক্যামেরা</button>
+                <button type="button" onClick={() => { setMenu(false); file.current?.click(); }}
+                  className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm hover:bg-brand-50"><Icon name="image" className="h-4 w-4" /> গ্যালারি</button>
+              </div>
+            </>
+          )}
+        </div>
         <textarea value={text} onChange={(e) => onText(e.target.value)} maxLength={1500} rows={1} placeholder="আপনার মেসেজ লিখুন…"
           onKeyDown={(e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey) && can) { e.preventDefault(); onSend(); } }}
           className="max-h-32 min-h-11 min-w-0 flex-1 resize-none rounded-2xl border border-line bg-white px-4 py-2.5 text-[15px] leading-snug focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-100" />
@@ -59,6 +74,7 @@ export function ChatComposer({ text, onText, photos, onPhotos, busy, onSend, upl
         </button>
       </div>
       <input ref={file} type="file" accept="image/*" multiple hidden onChange={pick} />
+      <input ref={cam} type="file" accept="image/*" capture="environment" hidden onChange={pick} />
     </form>
   );
 }
