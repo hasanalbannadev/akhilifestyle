@@ -94,6 +94,7 @@ export type PayMethod = string;
 export interface OrderItem { name: string; unit_price: number; quantity: number }
 export interface Order {
   order_no: string;
+  invoice_no?: string | null;   // the number shown to the customer when the shop set its own
   status: OrderStatus;
   payment_method: PayMethod;
   payment_label?: string | null;

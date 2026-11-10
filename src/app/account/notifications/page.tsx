@@ -26,7 +26,7 @@ export default function NotificationsPage() {
   const items = useMemo<Item[]>(() => {
     const a: Item[] = (orders.data ?? []).map((o) => ({
       id: `o-${o.order_no}-${o.status}-${o.payment_status}`,
-      text: `অর্ডার #${o.order_no}: ${ORDER_STATUS_LABEL[o.status]}`,
+      text: `অর্ডার #${o.invoice_no || o.order_no}: ${ORDER_STATUS_LABEL[o.status]}`,
       href: `/order/${o.order_no}`, date: o.created_at, icon: "box",
     }));
     const b: Item[] = (returns.data ?? []).map((r) => ({

@@ -90,12 +90,12 @@ export function OrderDetailView({ orderNo, placed, paid }: { orderNo: string; pl
         <div className="rounded-2xl bg-gradient-to-r from-emerald-50 to-white p-6 text-center">
           <Icon name="check-circle" className="mx-auto h-12 w-12 text-emerald-500" />
           <h1 className="mt-2 text-2xl font-bold">অর্ডার সম্পন্ন হয়েছে!</h1>
-          <p className="text-muted">আপনার অর্ডার নম্বর <b className="text-ink">#{order.order_no}</b>। আমরা অর্ডার কনফার্ম করলে SMS পাবেন।</p>
+          <p className="text-muted">আপনার অর্ডার নম্বর <b className="text-ink">#{order.invoice_no || order.order_no}</b>। আমরা অর্ডার কনফার্ম করলে SMS পাবেন।</p>
         </div>
       )}
 
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-xl font-bold">অর্ডার #{order.order_no}</h2>
+        <h2 className="text-xl font-bold">অর্ডার #{order.invoice_no || order.order_no}</h2>
         <OrderStatusBadge status={order.status} />
       </div>
 
