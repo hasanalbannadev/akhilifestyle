@@ -11,7 +11,7 @@ import { formatDate } from "@/lib/format";
 import type { SupportMsg } from "@/types";
 
 // প্রথমবার চ্যাট খুললে, বা শেষ মেসেজের পর এতক্ষণ পার হলে (ঘণ্টা) আবার স্বাগত বার্তা দেখায়। এটা শুধু দেখানো হয়, ডাটাবেসে সেভ হয় না।
-const GREET_AFTER_HOURS = 6;
+const GREET_AFTER_HOURS = 2;
 const GREETING = "আসসালামু আলাইকুম! 🛍️ Akhi Lifestyle-এ আপনাকে স্বাগতম।\nআপনার পছন্দের ব্যাগ, অ্যাকসেসরিজ আর আরও অনেক কিছু এখন এক জায়গায়। ✨\nShop Smart • Live Stylish\nপণ্য, দাম, অর্ডার বা ডেলিভারি নিয়ে যা জানতে চান, এখানেই লিখুন। ছবিও দিতে পারেন।\nআমাদের এজেন্ট খুব শীঘ্রই আপনার সাথে যোগাযোগ করবে 💖";
 
 function Greeting() {
@@ -26,7 +26,7 @@ function Greeting() {
 }
 
 // আমাদের সাথে সরাসরি মেসেজ। ছবি দেওয়া যায় (সর্বোচ্চ ৩টা)। নিজের মেসেজ এডিট করা যায়, মোছা যায় না।
-export function SupportChat() {
+export function SupportChat({ compact = false }: { compact?: boolean } = {}) {   // compact: ছোট চ্যাট উইন্ডোর ভেতরে (ওপরের শিরোনাম ছাড়া, পুরো উচ্চতা জুড়ে)
   const toast = useToast();
   const [msgs, setMsgs] = useState<SupportMsg[] | null>(null);
   const [text, setText] = useState("");
@@ -98,12 +98,14 @@ export function SupportChat() {
   };
 
   return (
-    <section className="mb-5 rounded-2xl border border-line bg-white">
-      <div className="border-b border-line px-4 py-3">
-        <h2 className="font-bold">আমাদের মেসেজ করুন</h2>
-        <p className="text-xs text-muted">আপনার প্রশ্ন বা সমস্যা লিখুন, ছবিও দিতে পারেন। আমরা এখানেই উত্তর দেব।</p>
-      </div>
-      <div className="max-h-[55vh] min-h-32 space-y-3 overflow-y-auto p-4" aria-live="polite">
+    <section className={compact ? "flex h-full min-h-0 flex-col bg-white" : "mb-5 rounded-2xl border border-line bg-white"}>
+      {!compact && (
+        <div className="border-b border-line px-4 py-3">
+          <h2 className="font-bold">আমাদের মেসেজ করুন</h2>
+          <p className="text-xs text-muted">আপনার প্রশ্ন বা সমস্যা লিখুন, ছবিও দিতে পারেন। আমরা এখানেই উত্তর দেব।</p>
+        </div>
+      )}
+      <div className={compact ? "min-h-0 flex-1 space-y-3 overflow-y-auto p-3" : "max-h-[55vh] min-h-32 space-y-3 overflow-y-auto p-4"} aria-live="polite">
         {msgs === null ? <p className="text-center text-sm text-muted">লোড হচ্ছে…</p>
           : msgs.length === 0 && greetAfter === null ? <p className="text-center text-sm text-muted">এখনো কোনো মেসেজ নেই।</p>
           : <>

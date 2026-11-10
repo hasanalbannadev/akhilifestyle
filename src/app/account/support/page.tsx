@@ -1,5 +1,6 @@
 import { SupportChat } from "@/components/account/SupportChat";
 import { PageTitle } from "@/components/account/PageTitle";
+import { BackButton } from "@/components/account/BackButton";
 import { Icon } from "@/components/ui/Icon";
 import { SITE } from "@/lib/site";
 
@@ -14,6 +15,7 @@ export default function SupportPage() {
   ].filter((l) => l.href);
   return (
     <>
+      <BackButton />
       <PageTitle title="সাপোর্ট" sub="যেকোনো সমস্যায় আমরা পাশে আছি।" />
       <SupportChat />
       <ul className="grid gap-3 sm:grid-cols-2">

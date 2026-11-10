@@ -6,7 +6,7 @@ import { Providers } from "@/context/Providers";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileNav } from "@/components/layout/MobileNav";
-import { SupportFab } from "@/components/layout/SupportFab";
+import { ChatWidget } from "@/components/layout/ChatWidget";
 import { catalogApi } from "@/lib/api/catalog";
 import { safe } from "@/lib/api/safe";
 import { SITE } from "@/lib/site";
@@ -65,14 +65,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     fbq('track', 'PageView');
   `}
 </Script>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
         <Providers>
           <Header categories={categories} />
           <main className="container-x py-2.5 md:py-3">{children}</main>
           <Footer />
           <MobileNav />
-          <SupportFab />
+          <ChatWidget />
           <CouponPopup />
         </Providers>
       </body>
