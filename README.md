@@ -1,55 +1,190 @@
-# Akhi Lifestyle - Customer Website (Next.js)
+<div align="center">
 
-আপনার লাইভ `shop_backend` (FastAPI) API এর উপর বানানো কাস্টমার ওয়েবসাইট। Admin panel নেই, শুধু কাস্টমার সাইড।
-Stack: Next.js (App Router) + TypeScript + Tailwind CSS v4।
+# Akhi Lifestyle
 
-## ১. VS Code এ চালানো
-```bash
-npm install
-cp .env.example .env.local      # তারপর .env.local এ নিজের মান বসান
-npm run dev                     # http://localhost:3000
+**Customer storefront for an online accessories and lifestyle shop in Bangladesh.**
+
+[![Live](https://img.shields.io/badge/live-akhilifestyle.com-e11d48?style=for-the-badge)](https://akhilifestyle.com)
+
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A5%2020.9-339933?logo=nodedotjs&logoColor=white)
+![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/DB-PostgreSQL-4169E1?logo=postgresql&logoColor=white)
+![WebSocket](https://img.shields.io/badge/Live_chat-WebSocket-010101?logo=socketdotio&logoColor=white)
+![PM2](https://img.shields.io/badge/Process-PM2-2B037A?logo=pm2&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?logo=githubactions&logoColor=white)
+![Built with Claude](https://img.shields.io/badge/Built_with-Claude-D97757?logo=anthropic&logoColor=white)
+
+</div>
+
+---
+
+## Overview
+
+This repository is the **customer-facing website**. Browsing, cart, checkout, order tracking, returns and live support chat all live here. Catalog, orders and payments are served by a separate FastAPI backend (`shop_backend`), and the shop is operated from a separate admin panel.
+
 ```
-Node 20.9+ লাগবে।
+Customer website (this repo)  ──►  Backend API (FastAPI + PostgreSQL)  ◄──  Admin panel
+akhilifestyle.com                  (Private API)            (Private Admin Panel)
+```
 
-## ২. .env.local (সবচেয়ে জরুরি)
-| নাম | কাজ |
+## Features
+
+### Shopping
+- Home page with banner slider, best sellers, new arrivals and offers
+- Shop and category pages with filters, sorting and pagination
+- Product page with image gallery, colour selection, reviews, delivery info and related products
+- Search with live suggestions, by product name or **Product code** (English and Bengali digits)
+- Cart that works without login, plus a wishlist
+- Checkout with address book, coupons and multiple payment methods: Cash on Delivery, bKash, Nagad, SSLCommerz
+
+### After the order
+- Live order tracking, plus guest tracking with an order or invoice number
+- Invoice view, print and PDF download
+- **Custom Invoice no.**: the shop can set its own number. If it does not, the site's automatic order number is shown
+- Cancellation requests, returns with bKash refund details, and one-tap reorder
+- Every return step (request, approval, pickup, refund) is visible live to the customer
+
+### Account
+- Passwordless OTP login
+- Profile with photo, saved addresses, wishlist, reviews, payment history and notifications
+
+### Support
+- Floating chat icon: a compact chat window on desktop, the full support page on mobile
+- Real-time chat with the shop over WebSocket, with image sharing from camera or gallery
+- Messenger, WhatsApp and phone shortcuts
+
+### Product code
+- Every product can carry a short code (for example `405`)
+- Shown on product cards, product page (with a copy button), cart, wishlist, order details and invoices
+- Lets customers quote a product exactly when they message the shop
+- Hidden when no code is set
+
+### SEO and platform
+- Per-page title, description, canonical URL and Open Graph tags
+- Product and breadcrumb structured data (JSON-LD)
+- Auto-generated `sitemap.xml` and `robots.txt`, private pages set to `noindex`
+- Mobile bottom navigation and PWA manifest
+
+## Tech stack
+
+| Area | Technology |
 |---|---|
-| `NEXT_PUBLIC_API_URL` | লাইভ Backend, শেষে `/api/v1` (যেমন `https://api.yourdomain.com/api/v1`) |
-| `NEXT_PUBLIC_SITE_URL` | এই সাইটের লাইভ ঠিকানা (SEO/sitemap) |
-| বাকিগুলো | দোকানের নাম, ফোন, ইমেইল, ঠিকানা, সোশ্যাল, Messenger/WhatsApp |
+| Framework | Next.js 16 (App Router) |
+| UI | React 19, Tailwind CSS 4 |
+| Language | TypeScript 5 |
+| State | React Context (Auth, Cart, Wishlist, Toast) |
+| Real-time | WebSocket, with polling fallback |
+| Backend | FastAPI, PostgreSQL (separate repository) |
+| Hosting | Linux server, Nginx, PM2 |
+| CI/CD | GitHub Actions over SSH |
 
-## ৩. Backend এ যা বদলাতে হবে (খুব জরুরি)
-Backend এর `.env` এ:
-- `FRONTEND_URL=https://yourdomain.com` (CORS + SSLCommerz পেমেন্টের পর এখানেই ফেরত আসে)
-- লোকাল টেস্টে `http://localhost:3000` আগে থেকেই allowed আছে।
-- SSLCommerz success/fail redirect যায় `/order/{অর্ডার নম্বর}?paid=1` বা `?paid=0` এ (এই পেজ বানানো আছে)।
+## Getting started
 
-## ৪. হোস্ট
-- **Vercel**: GitHub এ push -> Import -> Environment Variables এ `.env.example` এর মান বসান -> Deploy।
-- **VPS**: `npm run build && npm start` (PM2 + Nginx proxy)।
+Requires **Node.js 20.9 or newer**.
 
-## ৫. ফোল্ডার ম্যাপ (কোথায় কী এডিট করবেন)
+```bash
+git clone https://github.com/hasanalbannadev/akhilifestyle.git
+cd akhilifestyle
+npm install
+cp .env.example .env.local     # then edit the values
+npm run dev                    # http://localhost:3000
 ```
-src/app/            পেজ (page.tsx), layout, robots, sitemap, manifest
-src/components/     ui/ layout/ home/ product/ cart/ checkout/ orders/ account/
-src/context/        Auth, Cart, Wishlist, Toast
-src/lib/api/        Backend এর প্রতিটা endpoint (catalog, cart, orders, payments, ...)
-src/lib/constants.ts  সব বাংলা লেবেল, মেনু, ফিল্টার রেঞ্জ
-src/lib/site.ts     দোকানের তথ্য
-src/app/globals.css রং/ফন্ট (brand-600 = মূল গোলাপি)
+
+| Script | Purpose |
+|---|---|
+| `npm run dev` | Start the development server |
+| `npm run build` | Create a production build |
+| `npm start` | Serve the production build |
+| `npm run typecheck` | Run the TypeScript compiler without emitting files |
+
+## Environment variables
+
+Copy `.env.example` to `.env.local`. Variables starting with `NEXT_PUBLIC_` are exposed to the browser, so never put secrets in them.
+
+| Variable | Description |
+|---|---|
+| `NEXT_PUBLIC_API_URL` | Backend API base URL. Must end with `/api/v1`, without a trailing slash |
+| `NEXT_PUBLIC_SITE_URL` | Public URL of this site (SEO, sitemap, link previews) |
+| `NEXT_PUBLIC_SITE_NAME` | Shop name |
+| `NEXT_PUBLIC_TAGLINE` | Shop tagline |
+| `NEXT_PUBLIC_PHONE` | Contact phone number |
+| `NEXT_PUBLIC_EMAIL` | Contact email |
+| `NEXT_PUBLIC_ADDRESS` | Shop address |
+| `NEXT_PUBLIC_FACEBOOK_URL` | Facebook page link |
+| `NEXT_PUBLIC_INSTAGRAM_URL` | Instagram link |
+| `NEXT_PUBLIC_YOUTUBE_URL` | YouTube link |
+| `NEXT_PUBLIC_MESSENGER_URL` | Messenger link, shown in the chat window and support page |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | WhatsApp number, shown in the chat window and support page |
+
+A social or chat link left empty hides its button.
+
+## Backend requirements
+
+The site needs the backend to be configured as follows:
+
+- Set `FRONTEND_URL=https://akhilifestyle.com` in the backend `.env`. It controls CORS and is where SSLCommerz sends customers back after payment. `http://localhost:3000` is already allowed for local development.
+- After payment, customers return to `/order/{order_no}?paid=1` or `?paid=0`.
+- For real-time chat, the API's Nginx config must forward WebSocket upgrades (`Upgrade` and `Connection` headers). If it does not, chat falls back to polling and nothing breaks.
+
+## Deployment
+
+Pushing to `main` triggers `.github/workflows/deploy.yml`, which connects to the server over SSH, pulls the latest code, installs dependencies, builds, and restarts the `akhi-customer` process in PM2. You can also run it manually from the **Actions** tab with **Run workflow**.
+
+Add these repository secrets under **Settings → Secrets and variables → Actions**:
+
+| Secret | Value |
+|---|---|
+| `SERVER_HOST` | Server IP address |
+| `SERVER_USER` | SSH user |
+| `SERVER_PASSWORD` | SSH password |
+
+> Never commit `.env.local`. It is already listed in `.gitignore`. Keep the production `.env.local` on the server only.
+
+To host elsewhere, import the repository into Vercel and set the same environment variables, or run `npm run build && npm start` behind Nginx on any VPS.
+
+## Project structure
+
 ```
-- হোম সেকশন বদলাতে: `src/app/page.tsx`
-- Footer লিংক: `src/lib/constants.ts`
-- প্রোমো ব্যানারের লেখা: `src/components/home/PromoBanner.tsx`
+src/
+├─ app/              Routes, layouts, robots, sitemap, manifest
+│  ├─ account/       Profile, orders, addresses, wishlist, returns, support
+│  └─ product/       Product pages
+├─ components/       ui · layout · home · product · cart · checkout · orders · account
+├─ context/          Auth, Cart, Wishlist, Toast providers
+├─ lib/
+│  ├─ api/           One client per backend endpoint group
+│  ├─ constants.ts   Labels, menus, filter ranges
+│  ├─ site.ts        Shop details, read from environment variables
+│  ├─ invoicePdf.ts  Invoice PDF generation
+│  └─ realtime.ts    Live updates and chat connection
+└─ types/            Shared TypeScript types
+```
 
-## ৬. যা আছে
-হোম (Banner slider, Best seller, New) · ক্যাটাগরি/শপ (ফিল্টার, সর্ট, পেজিনেশন) · প্রোডাক্ট ডিটেইলস (গ্যালারি, রিভিউ, ডেলিভারি, রিলেটেড) · কার্ট (guest ও চলে) · চেকআউট (ঠিকানা, কুপন, COD/SSLCommerz/bKash/Nagad) · অর্ডার ডিটেইলস (ট্র্যাকিং, ইনভয়েস, ক্যান্সেল, রিটার্ন, রি-অর্ডার) · গেস্ট অর্ডার ট্র্যাক · OTP লগইন · প্রোফাইল, ঠিকানা, পছন্দের তালিকা, রিভিউ, রিটার্ন, পেমেন্ট হিস্টরি, নোটিফিকেশন · সার্চ সাজেশন · মোবাইল bottom nav।
+### Where to change things
 
-## ৭. সীমাবদ্ধতা (Backend এ endpoint নেই বলে)
-- **লাইভ চ্যাট**: কাস্টমারের জন্য chat API নেই (Messenger webhook), তাই সাপোর্ট পেজে Messenger/WhatsApp/ফোন লিংক আছে।
-- **নোটিফিকেশন**: আলাদা API নেই, অর্ডার ও রিটার্নের অবস্থা থেকে তৈরি হয়।
-- **কালার/সাইজ ভ্যারিয়েন্ট, ব্র্যান্ড ফিল্টার, প্রোডাক্ট রেটিং কার্ডে**: Backend এ নেই, তাই বাদ।
-- প্রোডাক্টে রিভিউ দেওয়া যায় শুধু ডেলিভারি পাওয়া কাস্টমার (Backend নিয়ম)।
+| To change | Edit |
+|---|---|
+| Home page sections | `src/app/page.tsx` |
+| Footer links and menus | `src/lib/constants.ts` |
+| Promo banner text | `src/components/home/PromoBanner.tsx` |
+| Colours and fonts (`brand-600` is the main pink) | `src/app/globals.css` |
+| Shop name, phone, address | `.env.local` |
+| Chat icon and compact window | `src/components/layout/ChatWidget.tsx` |
 
-## ৮. SEO
-প্রতি পেজে title/description/canonical/Open Graph, পণ্যে Product + Breadcrumb JSON-LD, `sitemap.xml` (পণ্য ও ক্যাটাগরি অটো), `robots.txt`, প্রাইভেট পেজ noindex।
+## Built with
+
+Created and directed by Hasan Albanna (Flutter developer). The code was written with Claude (Anthropic).
+
+## Notes
+
+- Live chat, custom Invoice no. and Product code need the matching versions of the backend and admin panel. Updating only this repository will not enable them.
+- Only customers with a delivered order can leave a review (enforced by the backend).
+- Product codes are not included in SMS messages.
+
+## License
+
+All rights reserved. This is a private commercial project and may not be copied or reused without permission.
