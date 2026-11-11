@@ -60,7 +60,7 @@ function Sheet({ inv, print = false }: { inv: Invoice; print?: boolean }) {
           {inv.items.map((it, i) => (
             <tr key={i} className="border-b border-line/70 [break-inside:avoid]">
               <td className={`${td} text-muted`}>{i + 1}</td>
-              <td className={`${td} break-words`}>{it.name}{it.product_code && <span className="block text-xs text-muted">Code: {it.product_code}</span>}</td>
+              <td className={`${td} break-words`}>{it.name}{it.product_code && <span className="block text-xs text-muted">Product code: {it.product_code}</span>}</td>
               <td className={`${td} whitespace-nowrap text-right tabular-nums`}>{taka(it.unit_price)}</td>
               <td className={`${td} text-center tabular-nums`}>{it.quantity}</td>
               <td className={`${td} whitespace-nowrap text-right font-semibold tabular-nums`}>{taka(it.line_total)}</td>

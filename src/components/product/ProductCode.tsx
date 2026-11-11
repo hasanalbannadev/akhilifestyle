@@ -11,7 +11,7 @@ export function ProductCode({ code }: { code: string }) {
   };
   return (
     <p className="flex items-center gap-2 text-sm text-muted">
-      <span>প্রোডাক্ট কোড: <b className="text-ink">{code}</b></span>
+      <span>Product code: <b className="text-ink">{code}</b></span>
       <button type="button" onClick={copy} className="inline-flex items-center gap-1 rounded-full border border-line px-2 py-0.5 text-xs font-medium text-brand-600 hover:bg-brand-50">
         {copied && <Icon name="check" className="h-3.5 w-3.5" />}{copied ? "কপি হয়েছে" : "কপি"}
       </button>

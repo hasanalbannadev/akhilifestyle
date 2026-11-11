@@ -29,7 +29,7 @@ function render(inv: Invoice, shop: Shop): HTMLCanvasElement[] {
     return out.length ? out : [""];
   };
   // প্রথমে উচ্চতা মাপি
-  const rows = inv.items.map((it) => wrap(it.product_code ? `${it.name} (Code: ${it.product_code})` : it.name, `14px ${FONT}`, W - M * 2 - 290));
+  const rows = inv.items.map((it) => wrap(it.product_code ? `${it.name} (Product code: ${it.product_code})` : it.name, `14px ${FONT}`, W - M * 2 - 290));
   const bodyH = rows.reduce((a, r) => a + Math.max(34, r.length * 19 + 14), 0);
   const total = 300 + bodyH + 190 + 90;
   const pages = Math.max(1, Math.ceil(total / H));

@@ -19,7 +19,7 @@ export function CartItemRow({ line }: { line: CartLine }) {
       </Link>
       <div className="min-w-0 flex-1">
         <Link href={`/product/${line.slug}`} className="break-words font-medium hover:text-brand-600">{line.name}</Link>
-        {line.sku && <p className="mt-0.5 text-xs text-muted">কোড: {line.sku}</p>}
+        {line.sku && <p className="mt-0.5 text-xs text-muted">Product code: {line.sku}</p>}
         {line.color_name && (
           <p className="mt-0.5 flex items-center gap-1.5 text-xs text-muted">
             {line.color_hex && <i className="inline-block h-3 w-3 rounded-full border border-line" style={{ background: line.color_hex }} />}
