@@ -10,6 +10,7 @@ import { PriceTag } from "@/components/product/PriceTag";
 import { BuyBox } from "@/components/product/BuyBox";
 import { ColorProvider } from "@/components/product/ColorContext";
 import { ProductTabs } from "@/components/product/ProductTabs";
+import { ProductCode } from "@/components/product/ProductCode";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { SectionHeader } from "@/components/home/SectionHeader";
 import { catalogApi } from "@/lib/api/catalog";
@@ -101,6 +102,7 @@ export default async function ProductPage({ params }: Props) {
 
         <div className="space-y-5">
           <h1 className="text-2xl font-bold leading-snug md:text-3xl">{p.name}</h1>
+          {p.sku && <ProductCode code={p.sku} />}
           <div className="flex items-center gap-2 text-sm">
             <StarRating value={reviews.average ?? 0} />
             <span className="font-semibold">{reviews.average ? reviews.average.toFixed(1) : "নতুন"}</span>

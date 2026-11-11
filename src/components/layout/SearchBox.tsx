@@ -64,7 +64,7 @@ export function SearchBox({ className = "", big = false }: { className?: string;
                 className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm hover:bg-brand-50"
                 onClick={() => { setOpen(false); setQ(""); router.push(`/product/${s.slug}`); }}
               >
-                <Icon name="search" className="h-4 w-4 text-muted" /> {s.name}
+                <Icon name="search" className="h-4 w-4 text-muted" /> {s.name}{s.code && <span className="ml-auto shrink-0 text-xs text-muted">কোড: {s.code}</span>}
               </button>
             </li>
           ))}

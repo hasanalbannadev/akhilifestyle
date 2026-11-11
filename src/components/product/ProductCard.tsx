@@ -59,6 +59,7 @@ export function ProductCard({ p, priority = false, best = false }: { p: Product;
       <Link href={`/product/${p.slug}`} className="mt-1.5 min-h-9 break-words text-[13px] font-semibold leading-[18px] text-navy transition-colors hover:text-brand-600">
         {p.name}
       </Link>
+      {p.sku && <p className="mt-0.5 text-[11px] text-muted">কোড: {p.sku}</p>}
       <div className="mt-0.5"><PriceTag price={p.price} compare={p.compare_at_price} /></div>
       {colors.length > 0 && (
         <div role="radiogroup" aria-label="রং" className="mt-1 flex flex-wrap items-center gap-1.5">

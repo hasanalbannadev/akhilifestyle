@@ -13,6 +13,7 @@ export function OrderBreakdown({ order }: { order: Order }) {
           <li key={i} className="flex items-center justify-between gap-3 px-4 py-3">
             <div className="min-w-0">
               <p className="break-words font-medium">{it.name}</p>
+              {it.product_code && <p className="text-xs text-muted">কোড: {it.product_code}</p>}
               <p className="text-sm text-muted">{taka(it.unit_price)} × {it.quantity}</p>
             </div>
             <b>{taka(it.unit_price * it.quantity)}</b>

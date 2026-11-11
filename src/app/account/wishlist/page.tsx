@@ -45,6 +45,7 @@ export default function WishlistPage() {
                 <div>
                   <Link href={`/product/${p.slug}`} className="break-words font-medium hover:text-brand-600">{p.name}</Link>
                   <PriceTag price={p.price} compare={p.compare_at_price} />
+                  {p.sku && <p className="mt-0.5 text-xs text-muted">কোড: {p.sku}</p>}
                 </div>
                 <div className="flex gap-2">
                   <Button size="sm" disabled={p.stock < 1} loading={busy === p.id} onClick={() => act(p.id, () => wishlistApi.moveToCart(p.id), "কার্টে নেওয়া হয়েছে")}>
