@@ -8,6 +8,7 @@ export interface Product {
   category_id: number | null;
   name: string;
   slug: string;
+  sku?: string | null;          // প্রোডাক্ট কোড (যেমন 401)
   description: string | null;
   price: number;
   compare_at_price: number | null;
@@ -52,6 +53,7 @@ export interface CartLine {
   color_hex?: string | null;
   name: string;
   slug: string;
+  sku?: string | null;
   image: string | null;
   unit_price: number;
   quantity: number;
@@ -91,7 +93,7 @@ export type PaymentStatus = "unpaid" | "pending_verification" | "paid" | "failed
 // "cod" | "sslcommerz" | "pm_<id>" (admin এর যোগ করা bKash/Nagad/ব্যাংক) | পুরোনো "manual_bkash" / "manual_nagad"
 export type PayMethod = string;
 
-export interface OrderItem { name: string; unit_price: number; quantity: number }
+export interface OrderItem { name: string; unit_price: number; quantity: number; product_code?: string | null }
 export interface Order {
   order_no: string;
   invoice_no?: string | null;   // the number shown to the customer when the shop set its own
@@ -132,7 +134,7 @@ export interface Invoice {
   status: string;
   customer: { name: string; phone: string };
   ship_to: { district: string; area: string | null; address: string };
-  items: { name: string; quantity: number; unit_price: number; line_total: number }[];
+  items: { name: string; quantity: number; unit_price: number; line_total: number; product_code?: string | null }[];
   subtotal: number;
   discount: number;
   coupon_code: string | null;
@@ -159,6 +161,7 @@ export interface PaymentOptions {
 
 export interface PaymentHistoryRow {
   order_no: string;
+  invoice_no?: string | null;
   label?: string | null;
   method: string;
   amount: number;
@@ -192,6 +195,7 @@ export type ReturnStatus = "requested" | "approved" | "pickup" | "received" | "r
 export interface ReturnRequest {
   id: number;
   order_no: string;
+  invoice_no?: string | null;
   reason: string;
   status: ReturnStatus;
   status_bn?: string;
@@ -209,6 +213,6 @@ export interface ReturnRequest {
   total?: number;
 }
 
-export interface Suggestion { name: string; slug: string }
+export interface Suggestion { name: string; slug: string; code?: string | null }
 
 export interface SupportMsg { id: number; sender: "customer" | "admin"; text: string | null; images: string[]; edited: boolean; created_at: string }

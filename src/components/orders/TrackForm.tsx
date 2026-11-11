@@ -39,7 +39,7 @@ export function TrackForm() {
       {order && (
         <div className="space-y-5 rounded-2xl border border-line bg-white p-5">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold">অর্ডার #{order.order_no}</h2>
+            <h2 className="text-lg font-bold">অর্ডার #{order.invoice_no || order.order_no}</h2>
             <OrderStatusBadge status={order.status} />
           </div>
           <OrderTimeline order={order} />

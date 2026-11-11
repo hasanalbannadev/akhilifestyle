@@ -20,7 +20,7 @@ export default function PaymentHistoryPage() {
           {data.map((p, i) => (
             <li key={i} className="flex items-center justify-between gap-3 rounded-xl border border-line bg-white p-4 text-sm">
               <div>
-                <Link href={`/order/${p.order_no}`} className="font-bold hover:text-brand-600">#{p.order_no}</Link>
+                <Link href={`/order/${p.order_no}`} className="font-bold hover:text-brand-600">#{p.invoice_no || p.order_no}</Link>
                 <p className="text-muted">{payLabel(p.method, p.label)}{p.trx_id ? ` · ${p.trx_id}` : ""}</p>
                 <p className="text-xs text-muted">{formatDate(p.created_at)}</p>
               </div>

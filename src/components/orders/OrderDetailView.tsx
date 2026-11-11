@@ -162,7 +162,7 @@ export function OrderDetailView({ orderNo, placed, paid }: { orderNo: string; pl
         {order.status === "delivered" && !order.return_info && <Button variant="soft" onClick={() => setRet(true)}><Icon name="return" className="h-4 w-4" /> রিটার্ন করুন</Button>}
       </div>
 
-      <InvoiceModal orderNo={order.order_no} open={invoice} onClose={() => setInvoice(false)} />
+      <InvoiceModal orderNo={order.order_no} label={order.invoice_no || order.order_no} open={invoice} onClose={() => setInvoice(false)} />
       <ReturnModal orderNo={order.order_no} open={ret} onClose={() => setRet(false)} onDone={() => router.push("/account/returns")} />
     </div>
   );

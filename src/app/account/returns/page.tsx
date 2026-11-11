@@ -44,7 +44,7 @@ export default function ReturnsPage() {
           {data.map((r) => (
             <li key={r.id} className="rounded-xl border border-line bg-white p-4 text-sm">
               <div className="flex items-center justify-between">
-                <Link href={`/order/${r.order_no}`} className="font-bold hover:text-brand-600">#{r.order_no}</Link>
+                <Link href={`/order/${r.order_no}`} className="font-bold hover:text-brand-600">#{r.invoice_no || r.order_no}</Link>
                 <ReturnStatusBadge status={r.status} />
               </div>
               <p className="mt-2 break-words">{r.reason}</p>

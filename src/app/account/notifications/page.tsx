@@ -31,7 +31,7 @@ export default function NotificationsPage() {
     }));
     const b: Item[] = (returns.data ?? []).map((r) => ({
       id: `r-${r.id}-${r.status}`,
-      text: `রিটার্ন #${r.order_no}: ${RETURN_STATUS_LABEL[r.status]}`,
+      text: `রিটার্ন #${r.invoice_no || r.order_no}: ${RETURN_STATUS_LABEL[r.status]}`,
       href: "/account/returns", date: r.created_at, icon: "return",
     }));
     return [...a, ...b].sort((x, y) => +new Date(y.date) - +new Date(x.date));
