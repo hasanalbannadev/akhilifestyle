@@ -118,7 +118,7 @@ export default async function ProductPage({ params }: Props) {
               { icon: "refresh", t: "সহজ রিটার্ন" },
               { icon: "truck", t: "ক্যাশ অন ডেলিভারি" },
             ].map((f) => (
-              <li key={f.t} className="flex items-center gap-2 font-medium"><Icon name={f.icon} className="h-5 w-5 text-brand-600" />{f.t}</li>
+              <li key={f.t} className="flex items-center gap-2 font-medium"><Icon name={f.icon} className="h-5 w-5 shrink-0 text-brand-600" /><span className="min-w-0">{f.t}</span></li>
             ))}
           </ul>
 

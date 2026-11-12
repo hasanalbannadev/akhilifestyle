@@ -22,8 +22,8 @@ export function ProductGallery({ images, name, productId }: { images: ProductIma
   const cur = list[Math.min(active, list.length - 1)];
 
   return (
-    <div className="flex flex-row-reverse gap-2.5 sm:gap-3">
-      <div className="relative min-w-0 flex-1 overflow-hidden rounded-2xl border border-line bg-brand-50/50">
+    <div className="flex flex-row-reverse items-start gap-2.5 sm:gap-3">
+      <div className="relative min-w-0 flex-1 self-start overflow-hidden rounded-2xl border border-line bg-brand-50/50">
         <SmartImage key={cur?.url} src={cur?.url} alt={name} priority className="aspect-square w-full object-cover" />
         <WishlistButton productId={productId} className="absolute right-3 top-3 h-10 w-10" />
       </div>
