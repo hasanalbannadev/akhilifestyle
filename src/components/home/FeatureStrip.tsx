@@ -4,7 +4,7 @@ import { Icon } from "@/components/ui/Icon";
 const FEATURES = [
   { icon: "truck", title: "দ্রুত ডেলিভারি", text: "সারা বাংলাদেশে" },
   { icon: "card", title: "নিরাপদ পেমেন্ট", text: "COD, bKash, Nagad, কার্ড" },
-  { icon: "shield", title: "অরিজিনাল পণ্য", text: "১০০% কোয়ালিটি গ্যারান্টি" },
+  { icon: "shield", title: "অরিজিনাল পণ্য", text: "100% কোয়ালিটি গ্যারান্টি" },
   { icon: "refresh", title: "সহজ রিটার্ন", text: "সমস্যা হলে রিটার্ন করুন" },
 ];
 

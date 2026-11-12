@@ -114,7 +114,7 @@ export default async function ProductPage({ params }: Props) {
 
           <ul className="grid grid-cols-1 gap-2.5 rounded-xl bg-brand-50/60 p-4 text-sm sm:grid-cols-3">
             {[
-              { icon: "shield", t: "১০০% অরিজিনাল" },
+             { icon: "shield", t: "100% অরিজিনাল" },
               { icon: "refresh", t: "সহজ রিটার্ন" },
               { icon: "truck", t: "ক্যাশ অন ডেলিভারি" },
             ].map((f) => (
