@@ -32,11 +32,15 @@ export function HeroSlider({ banners }: { banners: Banner[] }) {
 
   const cur = banners[i];
   const inner = (
-    <SmartImage src={cur.image_url} alt={cur.title || "ব্যানার"} priority className="h-full w-full object-cover" />
+    <>
+      {/* ছবির মাপ যাই হোক: পুরো ছবি কাটা ছাড়া দেখায়, দুই পাশের ফাঁকা অংশ ওই ছবিরই ঝাপসা রঙে ভরে */}
+      <SmartImage src={cur.image_url} alt="" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-90 blur-2xl" />
+      <SmartImage src={cur.image_url} alt={cur.title || "ব্যানার"} priority className="relative h-full w-full object-contain" />
+    </>
   );
   return (
     <section className="relative overflow-hidden rounded-2xl bg-brand-50" aria-roledescription="carousel">
-      <div className="aspect-[16/6] sm:aspect-[21/5]">
+      <div className="relative aspect-[5/1] overflow-hidden">
         {cur.link_url ? (
           cur.link_url.startsWith("http")
             ? <a href={cur.link_url} className="block h-full">{inner}</a>
