@@ -6,7 +6,7 @@ import { Icon } from "@/components/ui/Icon";
 import { cartApi } from "@/lib/api/cart";
 import type { CouponPopup as Popup } from "@/types";
 
-// ছোট কুপন পপআপ: সাইটে ঢুকলে একবার ভেসে ওঠে (ট্যাব/ব্রাউজার বন্ধ করে আবার ঢুকলে আবার), কয়েক সেকেন্ড থাকে,
+// কুপন পপআপ (পুরো সাইটের মাঝখানে): সাইটে ঢুকলে একবার ভেসে ওঠে (ট্যাব/ব্রাউজার বন্ধ করে আবার ঢুকলে আবার), কয়েক সেকেন্ড থাকে,
 // কাস্টমার নিজেও ✕ চাপতে পারে। কুপন কোড কপি করা যায়। মাউস/আঙুল রাখলে সময় থেমে থাকে।
 const KEY = "akhi_coupon_popup_seen";
 
@@ -46,25 +46,40 @@ export function CouponPopup() {
     arm(Math.max(p.seconds || 2, 3));       // কপি করলে একটু বেশি সময় দেখায়
   };
 
+  const hasImg = !!p.image;
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-20 z-[60] flex justify-center px-3 md:bottom-6 md:justify-start md:px-6" role="dialog" aria-label="কুপন">
-      <div className="pointer-events-auto w-full max-w-[340px] animate-[popin_.25s_ease-out] overflow-hidden rounded-2xl border border-line bg-white shadow-2xl"
+    <div className="fixed inset-0 z-[70] grid place-items-center bg-black/55 p-4" role="dialog" aria-modal="true" aria-label="কুপন" onClick={close}>
+      <div className="relative w-full max-w-[380px]" onClick={(e) => e.stopPropagation()}
         onMouseEnter={() => timer.current && clearTimeout(timer.current)} onMouseLeave={() => arm(p.seconds || 2)}
         onTouchStart={() => timer.current && clearTimeout(timer.current)}>
-        <button onClick={close} aria-label="বন্ধ করুন" className="absolute right-2 top-2 z-10 grid h-7 w-7 place-items-center rounded-full bg-black/50 text-white">
+        <button onClick={close} aria-label="বন্ধ করুন" className="absolute -right-2.5 -top-2.5 z-10 grid h-9 w-9 place-items-center rounded-full border-2 border-brand-500 bg-white text-brand-600 shadow-lg">
           <Icon name="x" className="h-4 w-4" />
         </button>
-        {p.image && <div className="aspect-[16/7] w-full bg-brand-50"><SmartImage src={p.image} alt={p.title || "কুপন"} className="h-full w-full object-cover" /></div>}
-        <div className="space-y-2 p-3.5">
-          <p className="break-words text-base font-extrabold">{p.title || `${p.label} কুপন`}</p>
-          {p.text && <p className="break-words text-sm text-muted">{p.text}</p>}
-          <div className="flex items-center gap-2 rounded-lg border border-dashed border-brand-400 bg-brand-50 px-3 py-2">
-            <span className="min-w-0 flex-1 break-all text-sm font-extrabold tracking-wide text-brand-700">{p.code}</span>
-            <button onClick={copy} className="shrink-0 rounded-md bg-brand-600 px-2.5 py-1 text-xs font-bold text-white">{copied ? "কপি হয়েছে ✓" : "কপি"}</button>
+        <div className="max-h-[92vh] animate-[popin_.25s_ease-out] overflow-y-auto rounded-3xl border-2 border-brand-500 bg-white shadow-2xl">
+
+        {hasImg ? (
+          // ছবি পুরোটা, কাটা ছাড়া, নিজের মাপে
+          <SmartImage src={p.image} alt={p.title || "কুপন"} className="block h-auto w-full" />
+        ) : (
+          // ছবি না দিলে সাইটের রঙে ডিফল্ট ব্যানার
+          <div className="bg-gradient-to-br from-brand-100 via-brand-50 to-white px-5 pb-5 pt-9 text-center">
+            <p className="text-sm font-bold text-brand-600">স্পেশাল কুপন</p>
+            <p className="mt-1 text-5xl font-extrabold leading-tight text-brand-600">{p.label}</p>
+            <p className="mt-2 break-words text-lg font-extrabold">{p.title || "আপনার জন্য বিশেষ অফার"}</p>
+            {p.text && <p className="mt-1 break-words text-sm text-muted">{p.text}</p>}
           </div>
+        )}
+
+        <div className="space-y-3 border-t border-brand-100 bg-white p-4">
+          <button onClick={copy} aria-label="কুপন কোড কপি করুন"
+            className="flex w-full items-center gap-3 rounded-xl border-2 border-dashed border-brand-500 bg-brand-50 px-3 py-2.5 text-left shadow-[0_0_18px_rgba(219,20,80,.35)]">
+            <span className="min-w-0 flex-1 break-all text-xl font-extrabold tracking-wider text-brand-600">{p.code}</span>
+            <span className="shrink-0 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-bold text-white">{copied ? "কপি হয়েছে ✓" : "কপি"}</span>
+          </button>
           {p.button_text && p.link && (
-            <Link href={p.link} onClick={close} className="block rounded-lg bg-brand-600 py-2 text-center text-sm font-bold text-white">{p.button_text}</Link>
+            <Link href={p.link} onClick={close} className="block rounded-xl bg-brand-600 py-3 text-center text-base font-bold text-white shadow-md">{p.button_text}</Link>
           )}
+        </div>
         </div>
       </div>
     </div>
