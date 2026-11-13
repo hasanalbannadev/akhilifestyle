@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { SmartImage } from "@/components/ui/SmartImage";
+import { FitImage } from "@/components/ui/FitImage";
 import { MediaThumb } from "@/components/ui/MediaThumb";
 import { WishlistButton } from "./WishlistButton";
 import { useColor } from "./ColorContext";
@@ -24,16 +24,32 @@ export function ProductGallery({ images, name, productId }: { images: ProductIma
   const [active, setActive] = useState(0);
   useEffect(() => { setActive(0); }, [color?.id]); // রং বদলালে ওই রঙের প্রথম ছবি বড় ছবি হবে
   const cur = list[Math.min(active, list.length - 1)];
-  const playing = isVideo(cur?.url);
+  const isVid = isVideo(cur?.url);
+  const [playing, setPlaying] = useState(false);
+  useEffect(() => { setPlaying(false); }, [cur?.url]); // ভিডিও আগে থাম্বনেইল হিসেবে আসে, চাপলে চলে
 
   return (
     <div className="flex flex-row-reverse items-start gap-2.5 sm:gap-3">
       <div className="relative min-w-0 flex-1 self-start overflow-hidden rounded-2xl border border-line bg-brand-50/50">
-        {playing ? (
-          <video key={cur.url} src={imageUrl(cur.url)} controls autoPlay playsInline preload="metadata"
-            className="aspect-square w-full bg-black object-contain" />
+        {isVid ? (
+          playing ? (
+            <video key={cur.url} src={imageUrl(cur.url)} controls autoPlay playsInline preload="auto"
+              className="aspect-video w-full bg-black object-contain" />
+          ) : (
+            <button type="button" onClick={() => setPlaying(true)} aria-label={`ভিডিও চালান: ${name}`}
+              className="group relative block aspect-video w-full bg-black text-left">
+              <video src={`${imageUrl(cur.url)}#t=0.1`} preload="metadata" muted playsInline
+                className="pointer-events-none h-full w-full object-contain" />
+              <span className="absolute inset-0 flex items-center justify-center bg-black/25 transition group-hover:bg-black/35">
+                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 text-brand-600 shadow-lg">
+                  <svg viewBox="0 0 24 24" className="ml-1 h-7 w-7" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+                </span>
+              </span>
+              <span className="absolute inset-x-0 bottom-0 truncate bg-gradient-to-t from-black/70 to-transparent px-3 pb-2 pt-6 text-sm font-semibold text-white">{name}</span>
+            </button>
+          )
         ) : (
-          <SmartImage key={cur?.url} src={cur?.url} alt={name} priority className="aspect-square w-full object-contain" />
+          <FitImage key={cur?.url} src={cur?.url} alt={name} priority />
         )}
         <WishlistButton productId={productId} className="absolute right-3 top-3 h-10 w-10" />
       </div>

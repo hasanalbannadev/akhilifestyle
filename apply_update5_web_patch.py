@@ -42,12 +42,19 @@ def checkout_tsx(s):
         return s
     return once(s, 'toast(s.coupon_error, "error");', 'toast(errorMessage(new Error(s.coupon_error)), "error");', "app/checkout/page.tsx")
 
-
 def card_tsx(s):
-    if "aspect-square w-full object-contain transition-transform" in s:
+    if "FitImage" in s:
         return s
-    return once(s, "aspect-square w-full object-cover transition-transform", "aspect-square w-full object-contain transition-transform",
-                "components/product/ProductCard.tsx")
+    import re
+    m = re.search(r'<SmartImage key=\{img\} src=\{img\} alt=\{p\.name\} priority=\{priority\}\s*className="[^"]*" />', s)
+    if not m:
+        raise SystemExit("components/product/ProductCard.tsx: could not find the image tag - nothing was changed")
+    s = s.replace(m.group(0), '<span className="block transition-transform duration-300 group-hover:scale-105"><FitImage key={img} src={img} alt={p.name} priority={priority} /></span>')
+    if 'import { SmartImage }' in s:
+        s = s.replace('import { SmartImage }', 'import { FitImage } from "@/components/ui/FitImage";\nimport { SmartImage }', 1)
+    else:
+        s = s.replace('"use client";\n', '"use client";\nimport { FitImage } from "@/components/ui/FitImage";\n', 1)
+    return s
 
 
 def cart_tsx(s):
