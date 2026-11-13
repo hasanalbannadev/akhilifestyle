@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import { SmartImage } from "@/components/ui/SmartImage";
+import { MediaThumb } from "@/components/ui/MediaThumb";
 import { Icon } from "@/components/ui/Icon";
 import { useToast } from "@/context/ToastContext";
 import { reviewsApi } from "@/lib/api/reviews";
@@ -9,6 +9,7 @@ import { errorMessage } from "@/lib/errors";
 
 
 // রিভিউয়ের ছবি আপলোড (সর্বোচ্চ ৪টা)। ছবি বাদ দিলে সার্ভার থেকেও মুছে যায় (সেভ না করা হলে)।
+// (চ্যাটে আগে পাঠানো ভিডিও থাকলে সেটা ছোট প্রিভিউ হিসেবে দেখায়; এখানে নতুন করে শুধু ছবিই যোগ হয়)
 type Up = (f: File) => Promise<{ url: string }>;
 export function ReviewPhotos({ value, saved = [], onChange, max = 4, upload = reviewsApi.upload, discard = reviewsApi.discard }: {
   value: string[]; saved?: string[]; onChange: (v: string[]) => void; max?: number; upload?: Up; discard?: (u: string) => Promise<unknown>;
@@ -43,7 +44,7 @@ export function ReviewPhotos({ value, saved = [], onChange, max = 4, upload = re
       <div className="flex flex-wrap gap-2">
         {value.map((u) => (
           <div key={u} className="relative h-16 w-16 overflow-hidden rounded-lg border border-line">
-            <SmartImage src={u} alt="রিভিউয়ের ছবি" className="h-full w-full object-cover" />
+            <MediaThumb src={u} alt="রিভিউয়ের ছবি" className="h-full w-full object-cover" />
             <button type="button" aria-label="ছবি মুছুন" onClick={() => remove(u)}
               className="absolute right-0.5 top-0.5 grid h-5 w-5 place-items-center rounded-full bg-black/70 text-white">
               <Icon name="x" className="h-3 w-3" />
@@ -63,14 +64,14 @@ export function ReviewPhotos({ value, saved = [], onChange, max = 4, upload = re
   );
 }
 
-// রিভিউয়ের ছবির ছোট গ্যালারি (ক্লিক করলে বড় ছবি নতুন ট্যাবে)
+// রিভিউ/চ্যাটের ছবি ও ভিডিওর ছোট গ্যালারি (ক্লিক করলে বড় করে নতুন ট্যাবে খোলে)
 export function ReviewGallery({ images }: { images?: string[] }) {
   if (!images?.length) return null;
   return (
     <div className="mt-2 flex flex-wrap gap-2">
       {images.map((u) => (
         <a key={u} href={imageUrl(u)} target="_blank" rel="noopener noreferrer" className="h-16 w-16 overflow-hidden rounded-lg border border-line">
-          <SmartImage src={u} alt="রিভিউয়ের ছবি" className="h-full w-full object-cover" />
+          <MediaThumb src={u} alt="ছবি" className="h-full w-full object-cover" />
         </a>
       ))}
     </div>

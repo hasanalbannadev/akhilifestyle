@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import { SmartImage } from "@/components/ui/SmartImage";
+import { MediaThumb } from "@/components/ui/MediaThumb";
 import { Icon } from "@/components/ui/Icon";
 import { useToast } from "@/context/ToastContext";
 import { errorMessage } from "@/lib/errors";
@@ -26,7 +26,9 @@ export function ChatComposer({ text, onText, photos, onPhotos, busy, onSend, upl
     setUp(true);
     const next = [...photos];
     for (const f of files) {
-      if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { toast("শুধু JPG, PNG বা WEBP ছবি দিন", "error"); continue; }
+      const vid = /^video\/(mp4|webm|quicktime)$/.test(f.type);
+      if (!vid && !/^image\/(jpeg|png|webp)$/.test(f.type)) { toast("ছবি (JPG, PNG, WEBP) বা ভিডিও (MP4, MOV, WEBM) দিন", "error"); continue; }
+      if (vid && f.size > 20 * 1024 * 1024) { toast("ভিডিও সর্বোচ্চ 20 MB হতে পারবে", "error"); continue; }
       try { next.push((await upload(f)).url); } catch (err) { toast(errorMessage(err), "error"); }
     }
     onPhotos(next);
@@ -40,7 +42,7 @@ export function ChatComposer({ text, onText, photos, onPhotos, busy, onSend, upl
         <div className="mb-2 flex flex-wrap gap-2">
           {photos.map((u) => (
             <div key={u} className="relative h-14 w-14 overflow-hidden rounded-lg border border-line">
-              <SmartImage src={u} alt="ছবি" className="h-full w-full object-cover" />
+              <MediaThumb src={u} alt="ছবি বা ভিডিও" className="h-full w-full object-cover" />
               <button type="button" aria-label="ছবি মুছুন" onClick={() => remove(u)}
                 className="absolute right-0.5 top-0.5 grid h-5 w-5 place-items-center rounded-full bg-black/70 text-white"><Icon name="x" className="h-3 w-3" /></button>
             </div>
@@ -49,7 +51,7 @@ export function ChatComposer({ text, onText, photos, onPhotos, busy, onSend, upl
       )}
       <div className="flex items-end gap-2">
         <div className="relative shrink-0">
-          <button type="button" aria-label="ছবি যোগ করুন" title="ছবি যোগ করুন" disabled={photos.length >= max || up} onClick={() => setMenu((v) => !v)}
+          <button type="button" aria-label="ছবি বা ভিডিও যোগ করুন" title="ছবি বা ভিডিও যোগ করুন" disabled={photos.length >= max || up} onClick={() => setMenu((v) => !v)}
             className="grid h-11 w-11 place-items-center rounded-full border border-line text-brand-600 hover:bg-brand-50 disabled:opacity-40">
             {up ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-brand-600 border-t-transparent" /> : <Icon name="plus" className="h-5 w-5" />}
           </button>
@@ -73,7 +75,7 @@ export function ChatComposer({ text, onText, photos, onPhotos, busy, onSend, upl
           {busy ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" /> : <Icon name="send" className="h-5 w-5" />}
         </button>
       </div>
-      <input ref={file} type="file" accept="image/*" multiple hidden onChange={pick} />
+      <input ref={file} type="file" accept="image/*,video/mp4,video/webm,video/quicktime" multiple hidden onChange={pick} />
       <input ref={cam} type="file" accept="image/*" capture="environment" hidden onChange={pick} />
     </form>
   );

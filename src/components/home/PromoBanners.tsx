@@ -1,23 +1,16 @@
-import Link from "next/link";
-import { SmartImage } from "@/components/ui/SmartImage";
+import { FitBanner } from "./FitBanner";
 import { LinkButton } from "@/components/ui/Button";
 import type { Banner } from "@/types";
 
-// admin panel এর "Promo" ব্যানার (পণ্যের সারির মাঝখানে)। ছবি দিলে পুরো ব্যানার, ছবি না দিলে লেখা + অফারের দাম + বোতাম।
+// admin panel এর "Promo" ব্যানার (পণ্যের সারির নিচে)। ছবি দিলে কম উচ্চতার ব্যানারে পুরো ছবি (কাটা পড়ে না),
+// চাইলে ডান পাশে বাটন; ব্যানার চাপলে লিংকে যায়। ছবি না দিলে লেখা + অফারের দাম + বোতাম।
 export function PromoBanners({ banners }: { banners: Banner[] }) {
   return (
     <div className="space-y-2.5">
       {banners.map((b) => {
         const link = b.link_url || "/shop";
         if (b.image_url) {
-          const img = <SmartImage src={b.image_url} alt={b.title || "অফার"} className="h-full w-full object-cover" />;
-          return (
-            <section key={b.id} className="overflow-hidden rounded-xl bg-brand-50">
-              <div className="aspect-[16/6] sm:aspect-[21/5]">
-                {link.startsWith("http") ? <a href={link} className="block h-full">{img}</a> : <Link href={link} className="block h-full">{img}</Link>}
-              </div>
-            </section>
-          );
+          return <FitBanner key={b.id} src={b.image_url} alt={b.title || "অফার"} href={link} button={b.button_text} />;
         }
         return (
           <section key={b.id} className="flex items-center justify-between gap-4 overflow-hidden rounded-xl bg-gradient-to-r from-brand-100 via-brand-50 to-white px-5 py-3 md:px-10">

@@ -38,6 +38,7 @@ export function CouponPopup() {
 
   if (!p) return null;
   const copy = async () => {
+    if (!p.code) return;
     try { await navigator.clipboard.writeText(p.code); } catch {
       const t = document.createElement("textarea"); t.value = p.code; document.body.appendChild(t); t.select();
       try { document.execCommand("copy"); } catch { /* ignore */ } t.remove();
@@ -47,8 +48,15 @@ export function CouponPopup() {
   };
 
   const hasImg = !!p.image;
+  const hasCode = !!p.code;                       // শুধু ব্যানার ক্যাম্পেইনে কোড থাকে না
+  const hasBtn = !!(p.button_text && p.link);
+  const showBottom = hasCode || hasBtn;
+  // লিংক দিলে বাটন ছাড়াও ব্যানারে চাপলে সেই লিংকে যায়
+  const wrap = (child: React.ReactNode) => p.link
+    ? <Link href={p.link} onClick={close} className="block">{child}</Link>
+    : <>{child}</>;
   return (
-    <div className="fixed inset-0 z-[70] grid place-items-center bg-black/55 p-4" role="dialog" aria-modal="true" aria-label="কুপন" onClick={close}>
+    <div className="fixed inset-0 z-[70] grid place-items-center bg-black/55 p-4" role="dialog" aria-modal="true" aria-label="অফার" onClick={close}>
       <div className="relative w-full max-w-[380px]" onClick={(e) => e.stopPropagation()}
         onMouseEnter={() => timer.current && clearTimeout(timer.current)} onMouseLeave={() => arm(p.seconds || 2)}
         onTouchStart={() => timer.current && clearTimeout(timer.current)}>
@@ -57,29 +65,35 @@ export function CouponPopup() {
         </button>
         <div className="max-h-[92vh] animate-[popin_.25s_ease-out] overflow-y-auto rounded-3xl border-2 border-brand-500 bg-white shadow-2xl">
 
-        {hasImg ? (
-          // ছবি পুরোটা, কাটা ছাড়া, নিজের মাপে
-          <SmartImage src={p.image} alt={p.title || "কুপন"} className="block h-auto w-full" />
-        ) : (
-          // ছবি না দিলে সাইটের রঙে ডিফল্ট ব্যানার
-          <div className="bg-gradient-to-br from-brand-100 via-brand-50 to-white px-5 pb-5 pt-9 text-center">
-            <p className="text-sm font-bold text-brand-600">স্পেশাল কুপন</p>
-            <p className="mt-1 text-5xl font-extrabold leading-tight text-brand-600">{p.label}</p>
-            <p className="mt-2 break-words text-lg font-extrabold">{p.title || "আপনার জন্য বিশেষ অফার"}</p>
-            {p.text && <p className="mt-1 break-words text-sm text-muted">{p.text}</p>}
-          </div>
-        )}
-
-        <div className="space-y-3 border-t border-brand-100 bg-white p-4">
-          <button onClick={copy} aria-label="কুপন কোড কপি করুন"
-            className="flex w-full items-center gap-3 rounded-xl border-2 border-dashed border-brand-500 bg-brand-50 px-3 py-2.5 text-left shadow-[0_0_18px_rgba(219,20,80,.35)]">
-            <span className="min-w-0 flex-1 break-all text-xl font-extrabold tracking-wider text-brand-600">{p.code}</span>
-            <span className="shrink-0 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-bold text-white">{copied ? "কপি হয়েছে ✓" : "কপি"}</span>
-          </button>
-          {p.button_text && p.link && (
-            <Link href={p.link} onClick={close} className="block rounded-xl bg-brand-600 py-3 text-center text-base font-bold text-white shadow-md">{p.button_text}</Link>
+          {hasImg ? (
+            // ছবি পুরোটা, কাটা ছাড়া, নিজের মাপে
+            wrap(<SmartImage src={p.image} alt={p.title || "অফার"} className="block h-auto w-full" />)
+          ) : (
+            // ছবি না দিলে সাইটের রঙে ডিফল্ট ব্যানার
+            wrap(
+              <div className="bg-gradient-to-br from-brand-100 via-brand-50 to-white px-5 pb-5 pt-9 text-center">
+                {hasCode && <p className="text-sm font-bold text-brand-600">স্পেশাল কুপন</p>}
+                {hasCode && p.label && <p className="mt-1 text-5xl font-extrabold leading-tight text-brand-600">{p.label}</p>}
+                <p className={`break-words text-lg font-extrabold ${hasCode ? "mt-2" : "text-2xl text-brand-600"}`}>{p.title || "আপনার জন্য বিশেষ অফার"}</p>
+                {p.text && <p className="mt-1 break-words text-sm text-muted">{p.text}</p>}
+              </div>,
+            )
           )}
-        </div>
+
+          {showBottom && (
+            <div className="space-y-3 border-t border-brand-100 bg-white p-4">
+              {hasCode && (
+                <button onClick={copy} aria-label="কুপন কোড কপি করুন"
+                  className="flex w-full items-center gap-3 rounded-xl border-2 border-dashed border-brand-500 bg-brand-50 px-3 py-2.5 text-left shadow-[0_0_18px_rgba(219,20,80,.35)]">
+                  <span className="min-w-0 flex-1 break-all text-xl font-extrabold tracking-wider text-brand-600">{p.code}</span>
+                  <span className="shrink-0 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-bold text-white">{copied ? "কপি হয়েছে ✓" : "কপি"}</span>
+                </button>
+              )}
+              {hasBtn && (
+                <Link href={p.link!} onClick={close} className="block rounded-xl bg-brand-600 py-3 text-center text-base font-bold text-white shadow-md">{p.button_text}</Link>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
