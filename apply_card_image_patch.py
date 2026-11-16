@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Product card image: same square box on every card. Big photos shrink to fit (never cropped), small photos stay their own
-size, centred with a small gap, rounded corners. No quality loss.
+"""Product card image: same square box on every card. Big photos shrink and small photos enlarge to fill the same box (never cropped,
+proportions kept), rounded corners. Original file is not recompressed.
 Usage:  python3 apply_card_blend_patch.py /path/to/website/src
 NEW file (copy first): components/ui/CardImage.tsx.   Edits ONE file: components/product/ProductCard.tsx (.bak saved).
 Works whether the card currently has the original image tag or the earlier crop version. Safe to run twice."""
