@@ -9,6 +9,8 @@ import { supportApi } from "@/lib/api/support";
 import { errorMessage } from "@/lib/errors";
 import { formatDate } from "@/lib/format";
 import type { SupportMsg } from "@/types";
+import { ProductMsgCard, parseProductMsg } from "./ProductMsgCard";
+import { ChatCatalog } from "./ChatCatalog";
 
 // প্রথমবার চ্যাট খুললে, বা শেষ মেসেজের পর এতক্ষণ পার হলে (ঘণ্টা) আবার স্বাগত বার্তা দেখায়। এটা শুধু দেখানো হয়, ডাটাবেসে সেভ হয় না।
 const GREET_AFTER_HOURS = 2;
@@ -20,6 +22,7 @@ function Greeting() {
       <div className="max-w-[85%] rounded-2xl bg-brand-50 px-3.5 py-2 text-sm text-ink">
         <p className="mb-0.5 text-xs font-bold text-brand-600">Akhi Lifestyle</p>
         <p className="whitespace-pre-wrap break-words">{GREETING}</p>
+        <ChatCatalog />
       </div>
     </div>
   );
@@ -128,7 +131,7 @@ export function SupportChat({ compact = false }: { compact?: boolean } = {}) {  
                     </div>
                   ) : (
                     <>
-                      {m.text && <p className="whitespace-pre-wrap break-words">{m.text}</p>}
+                      {m.text && (parseProductMsg(m.text) ? <ProductMsgCard text={m.text} mine={mine} /> : <p className="whitespace-pre-wrap break-words">{m.text}</p>)}
                       <ReviewGallery images={m.images} />
                       <p className={`mt-1 text-[11px] ${mine ? "text-white/80" : "text-muted"}`}>
                         {formatDate(m.created_at)}{m.edited ? " · এডিটেড" : ""}
