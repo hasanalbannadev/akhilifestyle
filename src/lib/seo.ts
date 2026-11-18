@@ -11,6 +11,7 @@ export const SHIP_DHAKA = 60;          // ঢাকায় ডেলিভা�
 export const SHIP_OUTSIDE = 120;       // ঢাকার বাইরে
 export const HANDLE_DAYS = [0, 1];     // প্যাকিং: কত দিন
 export const TRANSIT_DAYS = [1, 4];    // পৌঁছাতে: কত দিন
+export const RETURN_FEE = 120;         // রিটার্নে কুরিয়ার খরচ (আনুমানিক)
 
 export const absUrl = (path: string) => `${SITE.url}${path.startsWith("/") ? path : "/" + path}`;
 
@@ -36,6 +37,7 @@ export function productJsonLd(p: Product, rating?: { average: number | null; cou
         merchantReturnDays: RETURN_DAYS,
         returnMethod: "https://schema.org/ReturnByMail",
         returnFees: "https://schema.org/ReturnShippingFees",
+        returnShippingFeesAmount: { "@type": "MonetaryAmount", value: RETURN_FEE, currency: "BDT" },
       },
       shippingDetails: [SHIP_DHAKA, SHIP_OUTSIDE].map((fee, i) => ({
         "@type": "OfferShippingDetails",
