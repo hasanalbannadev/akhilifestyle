@@ -82,6 +82,7 @@ export const organizationJsonLd = {
     streetAddress: "Kamarpara, Road 20, Sector 10",
     addressLocality: "Uttara",
     addressRegion: "Dhaka",
+    postalCode: "1230",
     addressCountry: "BD",
   },
 };
