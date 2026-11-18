@@ -75,6 +75,15 @@ export const organizationJsonLd = {
   url: SITE.url,
   email: SITE.email,
   telephone: SITE.phone,
+  logo: `${SITE.url}/icon-512.png`,
+  image: `${SITE.url}/icon-512.png`,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Kamarpara, Road 20, Sector 10",
+    addressLocality: "Uttara",
+    addressRegion: "Dhaka",
+    addressCountry: "BD",
+  },
 };
 
 export function breadcrumbJsonLd(items: { name: string; path: string }[]) {
