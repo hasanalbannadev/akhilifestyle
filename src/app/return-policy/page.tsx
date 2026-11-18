@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { withOg, RETURN_DAYS, SHIP_DHAKA, SHIP_OUTSIDE } from "@/lib/seo";
+import { withOg, applySeo, seoFor, RETURN_DAYS, SHIP_DHAKA, SHIP_OUTSIDE } from "@/lib/seo";
 import { StaticPage } from "@/components/layout/StaticPage";
 
-export const metadata: Metadata = withOg({
+const baseMetadata: Metadata = withOg({
   title: "রিটার্ন ও রিফান্ড পলিসি",
   description: "পণ্য রিটার্ন ও রিফান্ডের নিয়ম।",
   alternates: { canonical: "/return-policy" },
@@ -20,4 +20,8 @@ export default function Page() {
       </ul>
     </StaticPage>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return applySeo(baseMetadata, await seoFor("pages", "/return-policy"));
 }

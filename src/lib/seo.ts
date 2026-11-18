@@ -99,3 +99,30 @@ export function withOg(m: Metadata, path?: string): Metadata {
     twitter: { card: "summary_large_image", title, description: desc, ...(m.twitter ?? {}) },
   } as Metadata;
 }
+
+
+// ---- অ্যাডমিন প্যানেলের SEO (title / description / keywords / noindex) মেটাডাটায় বসায়
+import { seoApi, type SeoEntry } from "@/lib/api/seo";
+
+export async function seoFor(kind: "pages" | "categories" | "products", key: string): Promise<SeoEntry | undefined> {
+  const all = await seoApi.all();
+  return all[kind]?.[key];
+}
+
+export function applySeo(m: Metadata, o?: SeoEntry): Metadata {
+  if (!o) return m;
+  const out: Metadata = { ...m };
+  if (o.title) {
+    out.title = o.title;
+    out.openGraph = { ...(m.openGraph ?? {}), title: o.title } as Metadata["openGraph"];
+    out.twitter = { ...(m.twitter ?? {}), title: o.title } as Metadata["twitter"];
+  }
+  if (o.description) {
+    out.description = o.description;
+    out.openGraph = { ...(out.openGraph ?? {}), description: o.description } as Metadata["openGraph"];
+    out.twitter = { ...(out.twitter ?? {}), description: o.description } as Metadata["twitter"];
+  }
+  if (o.keywords) out.keywords = o.keywords.split(",").map((k) => k.trim()).filter(Boolean);
+  if (o.noindex) out.robots = { index: false, follow: false };
+  return out;
+}
