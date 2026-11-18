@@ -5,6 +5,13 @@ import { stripHtml } from "@/lib/format";
 import type { Product } from "@/types";
 import type { Metadata } from "next";
 
+// রিটার্ন ও ডেলিভারির তথ্য — এখানে বদলালে পণ্য কোড ও পলিসি পেজ দুটোতেই বদলাবে
+export const RETURN_DAYS = 7;          // কত দিনের মধ্যে রিটার্ন
+export const SHIP_DHAKA = 60;          // ঢাকায় ডেলিভারি চার্জ
+export const SHIP_OUTSIDE = 120;       // ঢাকার বাইরে
+export const HANDLE_DAYS = [0, 1];     // প্যাকিং: কত দিন
+export const TRANSIT_DAYS = [1, 4];    // পৌঁছাতে: কত দিন
+
 export const absUrl = (path: string) => `${SITE.url}${path.startsWith("/") ? path : "/" + path}`;
 
 export function productJsonLd(p: Product, rating?: { average: number | null; count: number }) {
@@ -22,6 +29,24 @@ export function productJsonLd(p: Product, rating?: { average: number | null; cou
       priceCurrency: "BDT",
       price: p.price,
       availability: p.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "BD",
+        returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: RETURN_DAYS,
+        returnMethod: "https://schema.org/ReturnByMail",
+        returnFees: "https://schema.org/ReturnShippingFees",
+      },
+      shippingDetails: [SHIP_DHAKA, SHIP_OUTSIDE].map((fee, i) => ({
+        "@type": "OfferShippingDetails",
+        shippingRate: { "@type": "MonetaryAmount", value: fee, currency: "BDT" },
+        shippingDestination: { "@type": "DefinedRegion", addressCountry: "BD", ...(i === 0 ? { addressRegion: "Dhaka" } : {}) },
+        deliveryTime: {
+          "@type": "ShippingDeliveryTime",
+          handlingTime: { "@type": "QuantitativeValue", minValue: HANDLE_DAYS[0], maxValue: HANDLE_DAYS[1], unitCode: "DAY" },
+          transitTime: { "@type": "QuantitativeValue", minValue: TRANSIT_DAYS[0], maxValue: TRANSIT_DAYS[1], unitCode: "DAY" },
+        },
+      })),
     },
     ...(rating && rating.count > 0 && rating.average
       ? { aggregateRating: { "@type": "AggregateRating", ratingValue: rating.average, reviewCount: rating.count } }
